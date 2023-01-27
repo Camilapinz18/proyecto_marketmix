@@ -4,19 +4,19 @@ const app = Vue.createApp({
       cargos: [
         {
           cargo: 'admin',
-          clave: 'admin1'
+          clave: 'adm1'
         },
         {
           cargo: 'secretario',
-          clave: 'secretario1'
+          clave: 'scr1'
         },
         {
           cargo: 'vendedor',
-          clave: 'vendedor1'
+          clave: 'ven1'
         },
         {
           cargo: 'ensamblador',
-          clave: 'ensamblador1'
+          clave: 'ens1'
         }
       ],
       usuario: '',
