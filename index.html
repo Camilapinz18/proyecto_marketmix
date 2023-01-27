@@ -14,16 +14,22 @@
         <div class="title">LOGIN FORM</div>
         <form @submit.prevent="save">
           <div class="field">
-            <input type="text" required id="position" />
+            <input v-model="user" type="text" required id="position" />
             <label for="position">POSITION</label>
           </div>
           <div class="field">
-            <input type="password" id="password" maxlength="4" required />
+            <input
+              v-model="password"
+              type="password"
+              id="password"
+              maxlength="4"
+              required
+            />
             <label for="password">PASSWORD</label>
           </div>
           <br /><br />
           <div class="field">
-            <input type="submit" value="Login" />
+            <input @click="checkFields" type="submit" value="Login" />
           </div>
         </form>
       </div>
