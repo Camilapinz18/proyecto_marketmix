@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Styles CSS-->
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="wrapper">
+        <div class="title">LOGIN FORM</div>
+        <form @submit.prevent="save">
+          <div class="field">
+            <input type="text" required id="position" />
+            <label for="position">POSITION</label>
+          </div>
+          <div class="field">
+            <input type="password" id="password" maxlength="4" required />
+            <label for="password">PASSWORD</label>
+          </div>
+          <br /><br />
+          <div class="field">
+            <input type="submit" value="Login" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+  <!--VUE JS-->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="./main.js"></script>
+</html>
