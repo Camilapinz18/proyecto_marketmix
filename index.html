@@ -11,7 +11,7 @@
   <body>
     <div id="app" class="main-container">
       <!--LOGIN-->
-      <div class="wrapper">
+      <div v-if="activeLogin" class="wrapper">
         <div class="title">LOGIN FORM</div>
         <form @submit.prevent="save">
           <div class="field">
@@ -34,54 +34,62 @@
           </div>
         </form>
       </div>
-
       <!--ADMIN-->
-      <div class="wrapper big-wrapper">
+      <div v-if="activeAdmin" class="wrapper big-wrapper">
         <div class="title">ADMINISTRATOR</div>
         <!--FORM-->
         <form @submit.prevent="save">
           <div class="container">
             <div class="field">
-              <select
-                type="text"
-                required
-                id="position"
-                v-model="positionSelect"
-              >
-                <option v-for="position in positions" v-bind:value="position">
-                  {{ position.position }}
+              <select required refs="position" v-model="positionSelect">
+                <option v-for="item in users" v-bind:value="item">
+                  {{ item.name }}
                 </option>
               </select>
-              <label for="position">Position</label>
+              <label for="position">POSITION</label>
             </div>
             <div class="field">
-              <input v-model="salaryInput" type="number" id="salary" required />
+              <input
+                type="number"
+                id="salary"
+                placeholder="Salary"
+                required
+                v-model="salary"
+                :disabled="isChange? false: true"
+              />
+
               <label for="salary">Salary</label>
             </div>
             <div class="field">
               <input
                 type="number"
-                id="quantyShoes"
+                refs="quantyShoes"
+                placeholder="Quanty shoes"
                 required
-                :disabled="position ==='assembler'? false: true"
+                :disabled="positionSelect ==='assembler' && isChange? false: true"
+                v-model="quantyShoes"
               />
               <label for="quantyShoes">Quanty shoes</label>
             </div>
             <div class="field">
               <input
                 type="number"
-                id="priceShoes"
+                refs="priceShoes"
+                placeholder="Price shoes"
                 required
-                :disabled="position ==='assembler'? false: true"
+                :disabled="positionSelect ==='assembler' && isChange? false: true"
+                v-model="priceShoes"
               />
               <label for="priceShoes">Price shoes</label>
             </div>
             <div class="field">
               <input
                 type="number"
-                id="commision"
+                refs="commision"
+                placeholder="Commision"
                 required
-                :disabled="position ==='seller'? false: true"
+                :disabled="positionSelect ==='seller' && isChange? false: true"
+                v-model="commision"
               />
               <label for="commision">Commision</label>
             </div>
@@ -90,12 +98,27 @@
         <div class="container m-2">
           <br />
           <div class="field">
-            <button v-on:click="change">Change</button>
+            <button
+              v-on:click="change"
+              :disabled="!positionSelect ?true: false"
+            >
+              {{ btnChange }}
+            </button>
           </div>
           <div class="field">
-            <button v-on:click="save">Save</button>
+            <button v-on:click="save" :disabled="!positionSelect ?true: false">
+              Save
+            </button>
           </div>
         </div>
+      </div>
+      <!--Loader-->
+      <div class="loader" v-if="loader">
+        <h2 class="text-loader">{{ messageLoader }}<span>&#160;</span></h2>
+      </div>
+      <!--MessageError-->
+      <div v-if="isError">
+        <h2>{{ messageError }}</h2>
       </div>
     </div>
   </body>

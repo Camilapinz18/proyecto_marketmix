@@ -209,7 +209,7 @@ button:enabled:active {
   height: 50px;
   background-color: rgba(255, 255, 255, 0.804);
   border-left: 1px solid #000;
-  animation: escribir 5s steps(30) infinite alternate;
+  /* animation: escribir 5s steps(30) infinite alternate; */
 }
 
 @keyframes escribir {
