@@ -3,36 +3,40 @@ const app = Vue.createApp({
     return {
       positions: [
         {
-          position: 'admin',
+          position: 'Administrator',
           password: 'adm1'
         },
         {
-          position: 'secretario',
-          password: 'scr1'
+          position: 'Secretary',
+          password: 'scr1',
+          salary: 0
         },
         {
-          position: 'vendedor',
-          password: 'ven1'
+          position: 'Seller',
+          password: 'sel1',
+          salary: 0
         },
         {
-          position: 'ensamblador',
-          password: 'ens1'
+          position: 'Assembler',
+          password: 'asm1',
+          salary: 0
         }
       ],
       user: '',
-      password: ''
+      password: '',
+      positionSelect: '',
+      salaryInput: 0
     }
   },
   methods: {
-    checkData () { 
+    checkData () {
       const isUser = this.positions.find(
         user => user.position === this.user.trim()
       )
       if (isUser) {
         if (isUser.password.trim() === this.password) {
           alert('Successful login')
-          this.user= '',
-          this.password= ''
+          ;(this.user = ''), (this.password = '')
         } else {
           alert('Wrong password')
         }
@@ -46,6 +50,19 @@ const app = Vue.createApp({
       } else {
         this.checkData()
       }
+    },
+
+    save () {
+      let toModify = this.positions.find(employee =>
+        employee.position === this.positionSelect.position
+          ? (employee.salary = this.salaryInput)
+          : ''
+      )
+      this.positions.map(pos => console.log('m', pos))
+      this.salaryInput = ''
+    },
+    change () {
+      console.log('change')
     }
   }
 })

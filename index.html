@@ -10,6 +10,7 @@
   </head>
   <body>
     <div id="app" class="main-container">
+      <!--LOGIN-->
       <div class="wrapper">
         <div class="title">LOGIN FORM</div>
         <form @submit.prevent="save">
@@ -32,6 +33,69 @@
             <button @click="checkFields">Login</button>
           </div>
         </form>
+      </div>
+
+      <!--ADMIN-->
+      <div class="wrapper big-wrapper">
+        <div class="title">ADMINISTRATOR</div>
+        <!--FORM-->
+        <form @submit.prevent="save">
+          <div class="container">
+            <div class="field">
+              <select
+                type="text"
+                required
+                id="position"
+                v-model="positionSelect"
+              >
+                <option v-for="position in positions" v-bind:value="position">
+                  {{ position.position }}
+                </option>
+              </select>
+              <label for="position">Position</label>
+            </div>
+            <div class="field">
+              <input v-model="salaryInput" type="number" id="salary" required />
+              <label for="salary">Salary</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                id="quantyShoes"
+                required
+                :disabled="position ==='assembler'? false: true"
+              />
+              <label for="quantyShoes">Quanty shoes</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                id="priceShoes"
+                required
+                :disabled="position ==='assembler'? false: true"
+              />
+              <label for="priceShoes">Price shoes</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                id="commision"
+                required
+                :disabled="position ==='seller'? false: true"
+              />
+              <label for="commision">Commision</label>
+            </div>
+          </div>
+        </form>
+        <div class="container m-2">
+          <br />
+          <div class="field">
+            <button v-on:click="change">Change</button>
+          </div>
+          <div class="field">
+            <button v-on:click="save">Save</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>
