@@ -42,8 +42,12 @@
           <div class="container">
             <div class="field">
               <select required refs="position" v-model="positionSelect">
-                <option v-for="item in users" v-bind:value="item">
-                  {{ item.name }}
+                <option
+                  v-for="item in users"
+                  v-bind:value="item.name"
+                  :disabled="item.name === 'admin'"
+                >
+                  {{ item.name !== 'admin' ? item.name : "Select an option" }}
                 </option>
               </select>
               <label for="position">POSITION</label>
@@ -112,13 +116,20 @@
           </div>
         </div>
       </div>
-      <!--Loader-->
-      <div class="loader" v-if="loader">
+      <!--LOGIN-->
+      <div class="disabled-back" v-if="loader">
         <h2 class="text-loader">{{ messageLoader }}<span>&#160;</span></h2>
       </div>
       <!--MessageError-->
-      <div v-if="isError">
-        <h2>{{ messageError }}</h2>
+      <div v-if="isError" class="disabled-back">
+        <div class="wrapper">
+          <div class="title">
+            <h5>ERROR</h5>
+          </div>
+          <div class="content">
+            <h5>{{ messageError }}</h5>
+          </div>
+        </div>
       </div>
     </div>
   </body>

@@ -178,8 +178,7 @@ button:enabled:active {
   transform: scale(0.95);
 }
 
-/* LOADER*/
-.loader {
+.disabled-back {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.804);
   bottom: 0;
@@ -193,6 +192,7 @@ button:enabled:active {
   width: 100%;
   z-index: 999;
 }
+/* LOADER*/
 
 .text-loader {
   position: relative;
@@ -221,6 +221,21 @@ button:enabled:active {
   }
 }
 /* END LOADER */
+
+/* MODAL */
+
+.disabled-back .title {
+  line-height: 50px;
+}
+
+.disabled-back .content {
+  line-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* END MODAL */
+
 @media (min-width: 280px) and (max-width: 320px) {
   .wrapper {
     width: 260px;
