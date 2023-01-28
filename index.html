@@ -42,7 +42,7 @@
           <div class="container">
             <div class="field">
               <select required refs="position" v-model="positionSelect">
-                <option v-for="item in users" v-bind:value="item">
+                <option v-for="item in usersData" v-bind:value="item">
                   {{ item.name }}
                 </option>
               </select>

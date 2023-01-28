@@ -1,11 +1,30 @@
 const app = Vue.createApp({
   data () {
     return {
+      accounts: [
+        {
+          name: 'admin',
+          password: 'adm1'
+        },
+        {
+          name: 'secretary',
+          password: 'scr1'
+        },
+        {
+          name: 'seller',
+          password: 'sll1'
+        },
+        {
+          name: 'aassembler',
+          password: 'asb1'
+        }
+      ],
+      userLogged: '',
       activeLogin: true,
       activeAdmin: false,
       activeSeller: false,
       activeSecretary: false,
-      activessembler: false,
+      activeAssembler: false,
       isError: true,
       messageError: '',
       user: '',
@@ -19,38 +38,32 @@ const app = Vue.createApp({
       quantyShoes: null,
       priceShoes: null,
       commision: null,
-      users: [
-        {
-          name: 'admin',
-          password: 'adm1'
-        },
+      usersData: [
         {
           name: 'assembler',
-          password: 'asm1',
           salary: 1300000,
           quantyShoes: 500,
           priceShoes: 25000
         },
         {
           name: 'seller',
-          password: 'sel1',
           salary: 1400000,
           commision: 600
         },
         {
           name: 'secretary',
-          password: 'srt1',
           salary: 1500000
         }
       ]
     }
   },
+
   watch: {
     positionSelect (newValue, oldValue) {
       this.isChange = false
       this.changeBtnChangeName()
       if (this.positionSelect) {
-        const user = this.users.find(element => element.name === newValue)
+        const user = this.usersData.find(element => element.name === newValue)
         if (user) {
           this.salary = user.salary
           this.quantyShoes = null
@@ -79,15 +92,47 @@ const app = Vue.createApp({
         this.messageError = ''
       }, 2000)
     },
+    onLoadPage () {
+      console.log('page refreshed')
+      this.checkIsAlreadyLogged()
+    },
     /*--LOGIN--*/
+    checkIsAlreadyLogged () {
+      if (localStorage.getItem('userLogged')) {
+        this.userLogged = JSON.parse(localStorage.getItem('userLogged'))
+        switch (this.userLogged.name) {
+          case 'admin':
+            this.activeLogin = false
+            this.activeAdmin = true
+            break
+
+          case 'seller':
+            this.activeLogin = false
+            this.activeSeller = true
+            break
+
+          case 'secretary':
+            this.activeLogin = false
+            this.activeSecretary = true
+            break
+
+          case 'assembler':
+            this.activeLogin = false
+            this.activeAssembler = true
+            break
+        }
+      }
+    },
     checkData () {
-      const isUser = this.users.find(user => user.name === this.user.trim())
+      const isUser = this.accounts.find(user => user.name === this.user.trim())
       if (isUser) {
         if (isUser.password.trim() === this.password) {
           ;(this.user = ''), (this.password = '')
           this.activeLogin = false
           this.activeAdmin = true
-          console.log('Successful login')
+          this.launchError('Successful login')
+          console.log('isUser', isUser)
+          localStorage.setItem('userLogged', JSON.stringify(isUser))
         } else {
           this.launchError('Wrong password')
         }
@@ -104,10 +149,11 @@ const app = Vue.createApp({
     },
     /*--ADMIN--*/
     save () {
+      console.log('posotionmselect', this.positionSelectChanged)
       this.messageLoader = 'Please wait...'
       this.changeLoaderState()
       setTimeout(() => {
-        const user = this.users.find(
+        const user = this.usersData.find(
           element => element.name === this.positionSelect
         )
         if (user) {
@@ -121,8 +167,8 @@ const app = Vue.createApp({
               user.commision = this.commision
               break
           }
-          this.users.splice(
-            this.users.findIndex(u => u.name === this.positionSelect),
+          this.usersData.splice(
+            this.usersData.findIndex(u => u.name === this.positionSelect),
             1,
             user
           )
@@ -130,7 +176,7 @@ const app = Vue.createApp({
         this.changeLoaderState()
         this.changeBtnChangeName()
         this.clearForm()
-      }, 10)
+      }, 1000)
     },
     change () {
       this.isChange = !this.isChange
@@ -150,6 +196,9 @@ const app = Vue.createApp({
       this.priceShoes = null
       this.commision = null
     }
+  },
+  created: function () {
+    this.onLoadPage()
   }
 })
 
