@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Styles CSS-->
+    <link rel="stylesheet" href="../styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="admin" class="main-container">
+      <div class="wrapper big-wrapper">
+        <div class="title">ADMINISTRATOR</div>
+        <!--FORM-->
+        <form @submit.prevent="save">
+          <div class="container">
+            <div class="field">
+              <select required refs="position" v-model="positionSelect">
+                <option v-for="item in positions" v-bind:value="item">
+                  {{item}}
+                </option>
+              </select>
+              <label for="position">POSITION</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                id="salary"
+                placeholder="Salary"
+                required
+                v-model="salary"
+                :disabled="isChange? false: true"
+              />
+              <label for="salary">Salary</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                refs="quantyShoes"
+                placeholder="Quanty shoes"
+                required
+                :disabled="positionSelect ==='assembler' && isChange? false: true"
+                v-model="quantyShoes"
+              />
+              <label for="quantyShoes">Quanty shoes</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                refs="priceShoes"
+                placeholder="Price shoes"
+                required
+                :disabled="positionSelect ==='assembler' && isChange? false: true"
+                v-model="priceShoes"
+              />
+              <label for="priceShoes">Price shoes</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                refs="commision"
+                placeholder="Commision"
+                required
+                :disabled="positionSelect ==='seller' && isChange? false: true"
+                v-model="commision"
+              />
+              <label for="commision">Commision</label>
+            </div>
+          </div>
+        </form>
+        <div class="container m-2">
+          <br />
+          <div class="field">
+            <button
+              v-on:click="change"
+              :disabled="!positionSelect ?true: false"
+            >
+              {{btnChange}}
+            </button>
+          </div>
+          <div class="field">
+            <button v-on:click="save" :disabled="!positionSelect ?true: false">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+      <!--Loader-->
+      <div class="loader" v-if="loader">
+        <h2 class="text-loader">{{messageLoader}}<span>&#160;</span></h2>
+      </div>
+    </div>
+  </body>
+  <!--VUE JS-->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- <script src="./main.js"></script> -->
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          isChange: false,
+          btnChange: "Change",
+          loader: false,
+          messageLoader: "",
+          positions: ["assembler", "seller", "secretary"],
+          positionSelect: null,
+          salary: null,
+          quantyShoes: null,
+          priceShoes: null,
+          commision: null,
+          users: [
+            {
+              name: "assembler",
+              salary: 1300000,
+              quantyShoes: 500,
+              priceShoes: 25000,
+            },
+            {
+              name: "seller",
+              salary: 1400000,
+              commision: 600,
+            },
+            {
+              name: "secretary",
+              salary: 1500000,
+            },
+          ],
+        };
+      },
+      watch: {
+        positionSelect(newValue, oldValue) {
+          this.isChange = false;
+          this.changeBtnChangeName();
+          if (this.positionSelect) {
+            const user = this.users.find(
+              (element) => element.name === newValue
+            );
+            if (user) {
+              this.salary = user.salary;
+              this.quantyShoes = null;
+              this.priceShoes = null;
+              this.commision = null;
+              switch (user.name) {
+                case "assembler":
+                  this.quantyShoes = user.quantyShoes;
+                  this.priceShoes = user.priceShoes;
+                  break;
+                case "seller":
+                  this.commision = user.commision;
+                  break;
+              }
+            }
+          }
+        },
+      },
+      methods: {
+        save() {
+          this.messageLoader = "Please wait...";
+          this.changeLoaderState();
+          setTimeout(() => {
+            const user = this.users.find(
+              (element) => element.name === this.positionSelect
+            );
+            if (user) {
+              user.salary = this.salary;
+              switch (user.name) {
+                case "assembler":
+                  user.quantyShoes = this.quantyShoes;
+                  user.priceShoes = this.priceShoes;
+                  break;
+                case "seller":
+                  user.commision = this.commision;
+                  break;
+              }
+              this.users.splice(
+                this.users.findIndex((u) => u.name === this.positionSelect),
+                1,
+                user
+              );
+            }
+            this.changeLoaderState();
+            this.changeBtnChangeName();
+            this.clearForm();
+          }, 4000);
+        },
+        change() {
+          this.isChange = !this.isChange;
+          this.changeBtnChangeName();
+        },
+        changeBtnChangeName() {
+          this.isChange
+            ? (this.btnChange = "No Change")
+            : (this.btnChange = "Change");
+        },
+        changeLoaderState() {
+          this.loader = !this.loader;
+        },
+        clearForm() {
+          this.positionSelect = null;
+          this.quantyShoes = null;
+          this.priceShoes = null;
+          this.commision = null;
+        },
+      },
+    });
+    app.mount("#admin");
+  </script>
+</html>

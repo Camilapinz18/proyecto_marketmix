@@ -40,6 +40,8 @@ d-none {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  min-height: 100vh;
 }
 
 .container {
@@ -49,17 +51,13 @@ d-none {
 }
 .wrapper,
 .big-wrapper {
-  position: fixed;
-  display: grid;
-  top: 25%;
   width: 500px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.1);
 }
 .big-wrapper {
-  top: 10%;
-  width: 80%;
+  width: 95%;
 }
 .wrapper .title {
   font-size: 35px;
@@ -90,7 +88,7 @@ button {
   font-size: 17px;
   padding-left: 20px;
   border: 1px solid #000;
-  border-radius: 25px;
+  border-radius: 8px;
   transition: all 0.3s ease;
 }
 input:focus,
@@ -98,6 +96,7 @@ input:valid,
 select:focus,
 select:valid {
   border-color: #ff6600;
+  outline: none;
 }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -119,10 +118,17 @@ select {
   background-position-x: 95%;
 }
 
+select option:checked {
+  background-color: #ff6600;
+  color: #fff;
+}
+
 input:disabled {
   color: #999999;
+  opacity: 0.6;
   border-color: #999999;
 }
+
 .wrapper form .field label {
   position: absolute;
   top: 50%;
@@ -137,7 +143,16 @@ input:disabled {
 form .field input:focus ~ label,
 form .field input:valid ~ label,
 form .field select:focus ~ label,
-form .field select:valid ~ label {
+form .field select:valid ~ label,
+form .field input:disabled ~ label {
+  top: 0%;
+  font-size: 16px;
+  color: #ff6600;
+  background: #fff;
+  transform: translateY(-50%);
+}
+
+.has-value:disabled {
   top: 0%;
   font-size: 16px;
   color: #ff6600;
@@ -156,24 +171,92 @@ button {
   background: #ff6600;
   transition: all 0.3s ease;
 }
-button:active {
+button:disabled {
+  opacity: 0.6;
+}
+button:enabled:active {
   transform: scale(0.95);
 }
 
+/* LOADER*/
+.loader {
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.804);
+  bottom: 0;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  min-height: 100vh;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+
+.text-loader {
+  position: relative;
+  float: left;
+  background-color: rgba(255, 255, 255, 0.804);
+  color: #000;
+  font-size: 2.5em;
+}
+
+.text-loader span {
+  position: absolute;
+  right: 0;
+  width: 0;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.804);
+  border-left: 1px solid #000;
+  animation: escribir 5s steps(30) infinite alternate;
+}
+
+@keyframes escribir {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
+/* END LOADER */
 @media (min-width: 280px) and (max-width: 320px) {
   .wrapper {
     width: 260px;
+  }
+  .container {
+    grid-template-columns: 1fr;
+    column-gap: 20px;
+  }
+  br {
+    display: none;
   }
 }
 
 @media only screen and (max-width: 900px) {
   .wrapper {
     width: 300px;
+    margin-top: 5rem;
+  }
+  .container {
+    grid-template-columns: 1fr;
+    column-gap: 15px;
+  }
+  br {
+    display: none;
   }
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
   .wrapper {
-    width: 450px;
+    width: 600px;
+  }
+  .container {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+  }
+  br {
+    display: none;
   }
 }
