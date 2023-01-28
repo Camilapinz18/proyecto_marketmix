@@ -15,7 +15,7 @@ const app = Vue.createApp({
           password: 'sll1'
         },
         {
-          name: 'aassembler',
+          name: 'assembler',
           password: 'asb1'
         }
       ],
@@ -25,7 +25,8 @@ const app = Vue.createApp({
       activeSeller: false,
       activeSecretary: false,
       activeAssembler: false,
-      isError: true,
+      activePayroll: false,
+      isError: false,
       messageError: '',
       user: '',
       password: '',
@@ -41,45 +42,71 @@ const app = Vue.createApp({
       transportationAllowance: 140606,
       monthlyHours: 160,
       generalPayroll: [],
+      overtime: 0,
+      sales: 0,
+      producedShoes: 0,
+      children: 0,
+      // usersData: [
+      //   {
+      //     name: 'assembler',
+      //     salary: 10,
+      //     maxQuantyShoes: null,
+      //     shoesProduced: null,
+      //     priceShoes: null,
+      //     overtime: null,
+      //     children: null
+      //   },
+      //   {
+      //     name: 'seller',
+      //     salary: null,
+      //     sales: null,
+      //     commission: null
+      //   },
+      //   {
+      //     name: 'secretary',
+      //     salary: null,
+      //     overtime: null
+      //   }
+      // ],
       usersData: [
         {
           name: 'assembler',
-          salary: 1300000,
-          maxQuantyShoes: 500,
-          shoesProduced: 1001,
-          priceShoes: 25000,
-          overtime: 7,
+          salary: 1100000,
+          maxQuantyShoes: 3100,
+          shoesProduced: 1200,
+          priceShoes: 10000,
+          overtime: 3,
           children: 3
         },
         {
           name: 'seller',
-          salary: 1400000,
-          sales: 1000000,
-          commission: 600
+          salary: 1200000,
+          sales: 6200300,
+          commission: 0
         },
         {
           name: 'secretary',
           salary: 1500000,
-          overtime: 7
+          overtime: 10
         }
       ]
     }
   },
 
   watch: {
-    positionSelect (newValue, oldValue) {
+    positionSelect (newValue) {
       this.isChange = false
       this.changeBtnChangeName()
       if (this.positionSelect) {
         const user = this.usersData.find(element => element.name === newValue)
         if (user) {
           this.salary = user.salary
-          maxQhis.quantyShoes = null
+          this.quantyShoes = null
           this.priceShoes = null
           this.commision = null
           switch (user.name) {
             case 'assembler':
-              maxQhis.quantyShoes = user.quantyShoes
+              this.quantyShoes = user.quantyShoes
               this.priceShoes = user.priceShoes
               break
             case 'seller':
@@ -98,12 +125,32 @@ const app = Vue.createApp({
       setTimeout(() => {
         this.isError = false
         this.messageError = ''
-      }, 2000)
+      }, 1000)
     },
     onLoadPage () {
       console.log('page refreshed')
       this.checkIsAlreadyLogged()
-      this.generatePayroll('all')
+    },
+    logout (active) {
+      this.activeLogin = true
+      localStorage.clear()
+      switch (active) {
+        case 'admin':
+          this.activeAdmin = false
+          break
+
+        case 'seller':
+          this.activeSeller = false
+          break
+
+        case 'secretary':
+          this.activeSecretary = false
+          break
+
+        case 'assembler':
+          this.activeAssembler = false
+          break
+      }
     },
     /*--LOGIN--*/
     checkIsAlreadyLogged () {
@@ -136,11 +183,29 @@ const app = Vue.createApp({
       const isUser = this.accounts.find(user => user.name === this.user.trim())
       if (isUser) {
         if (isUser.password.trim() === this.password) {
+          switch (isUser.name) {
+            case 'admin':
+              this.activeLogin = false
+              this.activeAdmin = true
+              break
+
+            case 'seller':
+              this.activeLogin = false
+              this.activeSeller = true
+              break
+
+            case 'secretary':
+              this.activeLogin = false
+              this.activeSecretary = true
+              break
+
+            case 'assembler':
+              this.activeLogin = false
+              this.activeAssembler = true
+              break
+          }
           ;(this.user = ''), (this.password = '')
-          this.activeLogin = false
-          this.activeAdmin = true
-          this.launchError('Successful login')
-          console.log('isUser', isUser)
+
           localStorage.setItem('userLogged', JSON.stringify(isUser))
         } else {
           this.launchError('Wrong password')
@@ -157,35 +222,73 @@ const app = Vue.createApp({
       }
     },
     /*--ADMIN--*/
-    save () {
-      console.log('posotionmselect', this.positionSelectChanged)
+    save (user) {
       this.messageLoader = 'Please wait...'
       this.changeLoaderState()
-      setTimeout(() => {
-        const user = this.usersData.find(
-          element => element.name === this.positionSelect
-        )
-        if (user) {
-          user.salary = this.salary
-          switch (user.name) {
-            case 'assembler':
-              maxQser.quantyShoes = this.quantyShoes
-              user.priceShoes = this.priceShoes
-              break
-            case 'seller':
-              user.commision = this.commision
-              break
-          }
-          this.usersData.splice(
-            this.usersData.findIndex(u => u.name === this.positionSelect),
-            1,
-            user
+
+      switch (user) {
+        case 'admin':
+          console.log('admin')
+          setTimeout(() => {
+            const user = this.usersData.find(
+              element => element.name === this.positionSelect
+            )
+            if (user) {
+              user.salary = this.salary
+              switch (user.name) {
+                case 'assembler':
+                  user.maxQuantyShoes = this.quantyShoes
+                  user.priceShoes = this.priceShoes
+                  break
+                case 'seller':
+                  user.commision = this.commision
+                  break
+              }
+              // this.users.splice(
+              //   this.users.findIndex(u => u.name === this.positionSelect),
+              //   1,
+              //   user
+              // )
+            }
+            this.changeLoaderState()
+            this.changeBtnChangeName()
+            this.clearForm()
+          }, 300)
+          break
+
+        case 'secretary':
+          console.log('secretary')
+          const secretary = this.usersData.find(
+            element => element.name === 'secretary'
           )
-        }
-        this.changeLoaderState()
-        this.changeBtnChangeName()
-        this.clearForm()
-      }, 1000)
+          secretary.overtime = this.overtime
+          console.log('secreaty', secretary)
+
+          break
+
+        case 'seller':
+          console.log('secretary')
+          const seller = this.usersData.find(
+            element => element.name === 'seller'
+          )
+          seller.sales = this.sales
+          console.log('seller', seller)
+
+          break
+
+        case 'assembler':
+          console.log('assembler')
+          const assembler = this.usersData.find(
+            element => element.name === 'assembler'
+          )
+          assembler.overtime = this.overtime
+          assembler.shoesProduced = this.producedShoes
+          assembler.children = this.children
+
+          console.log('assembler', assembler)
+
+          break
+      }
     },
     change () {
       this.isChange = !this.isChange
@@ -224,7 +327,14 @@ const app = Vue.createApp({
       const totalSeller =
         sellerData.salary + commission + this.transportationAllowance
 
-      return totalSeller
+      const reportData = {
+        baseSalary: sellerData.salary,
+        totalSales: sellerData.sales,
+        bonusBySales: commission,
+        totalSalary: totalSeller
+      }
+
+      return reportData
     },
 
     liquidateAssembler () {
@@ -271,7 +381,21 @@ const app = Vue.createApp({
         this.transportationAllowance +
         childrenBonus
 
-      return totalAssembler
+      const reportData = {
+        baseSalary: assemblerData.salary,
+        overtimeCost: overtimeHourCost,
+        overtimeHours: assemblerData.overtime,
+        overtimeTotal: overtimeHourCost * assemblerData.overtime,
+        shoesProduced: assemblerData.shoesProduced,
+        bonusPerShoe: productionBonusByShoe,
+        totalCostShoesProduced:
+          productionBonusByShoe * assemblerData.shoesProduced,
+        transportationAllowance: this.transportationAllowance,
+        childrenBonus: childrenBonus,
+        totalSalary: totalAssembler
+      }
+
+      return reportData
     },
 
     liquidateSecretary () {
@@ -282,20 +406,40 @@ const app = Vue.createApp({
       var overtimeHourCost = (hourCost * 180) / 100
       const totalSecretary =
         secretaryData.salary + overtimeHourCost * secretaryData.overtime
-      return totalSecretary
+
+      const reportData = {
+        baseSalary: secretaryData.salary,
+        overtimeCost: overtimeHourCost,
+        overtimeHours: secretaryData.overtime,
+        overtimeTotal: overtimeHourCost * secretaryData.overtime,
+        totalSalary: totalSecretary
+      }
+
+      return reportData
     },
 
     liquidateAll () {
       this.generalPayroll.push(this.liquidateAssembler())
       this.generalPayroll.push(this.liquidateSecretary())
       this.generalPayroll.push(this.liquidateSeller())
+
       return this.generalPayroll.reduce((acc, cur) => acc + cur)
     },
+
+    checkForCompleteEmployeesInfo () {
+      this.usersData.map(userData => {
+        console.log('userdata', userData)
+
+        const values = Object.values(userData)
+        values.map(value =>
+          value === null
+            ? this.launchError('There is some missing information')
+            : ''
+        )
+      })
+    },
     generatePayroll (employee) {
-      const transportationAllowance = 140606
-      const totalSeller = 0
-      const totalSecretary = 0
-      const totalAssembler = 0
+      this.checkForCompleteEmployeesInfo()
 
       switch (employee) {
         case 'seller':
@@ -314,6 +458,8 @@ const app = Vue.createApp({
           console.log('totalEmoresa', this.liquidateAll())
           break
       }
+      this.activeAdmin = false
+      this.activePayroll = true
     }
   },
   created: function () {

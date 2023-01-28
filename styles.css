@@ -6,6 +6,7 @@
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+
 * {
   margin: 0;
   padding: 0;
@@ -13,6 +14,7 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
 body {
   height: 100vh;
   width: 100%;
@@ -22,9 +24,11 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
+
 d-flex {
   display: flex;
 }
+
 d-none {
   display: none;
 }
@@ -36,6 +40,7 @@ d-none {
 .m-2 {
   margin: 2rem;
 }
+
 .main-container {
   display: flex;
   justify-content: center;
@@ -49,6 +54,7 @@ d-none {
   grid-template-columns: 1fr 1fr 1fr;
   column-gap: 20px;
 }
+
 .wrapper,
 .big-wrapper {
   width: 500px;
@@ -56,9 +62,11 @@ d-none {
   border-radius: 15px;
   box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.1);
 }
+
 .big-wrapper {
   width: 95%;
 }
+
 .wrapper .title {
   font-size: 35px;
   font-weight: 600;
@@ -69,14 +77,33 @@ d-none {
   border-radius: 15px 15px 0 0;
   background: #ff6600;
 }
+
 .wrapper form {
   padding: 10px 30px 50px 30px;
 }
+
 .field {
   height: 50px;
   width: 100%;
   margin-top: 20px;
   position: relative;
+  background-color: grey;
+}
+
+.item {
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  padding: 5px;
+}
+
+.items-table {
+  width: 50%;
+}
+
+.report-container {
+  display: flex;
+  flex-direction: row;
 }
 
 input,
@@ -91,6 +118,7 @@ button {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
 input:focus,
 input:valid,
 select:focus,
@@ -98,6 +126,7 @@ select:valid {
   border-color: #ff6600;
   outline: none;
 }
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -111,7 +140,7 @@ select {
   -moz-appearance: none;
   -o-appearance: none;
   appearance: none;
-  background-image: url(./assets/select-Icon.svg); /*aquí deberás escribir la ruta de la imagen que utilizarás como flecha del desplegable*/
+  background-image: url(./assets/select-Icon.svg);
   background-repeat: no-repeat;
   background-size: 25px;
   background-position: right center;
@@ -140,11 +169,12 @@ input:disabled {
   transform: translateY(-50%);
   transition: all 0.3s ease;
 }
-form .field input:focus ~ label,
-form .field input:valid ~ label,
-form .field select:focus ~ label,
-form .field select:valid ~ label,
-form .field input:disabled ~ label {
+
+form .field input:focus~label,
+form .field input:valid~label,
+form .field select:focus~label,
+form .field select:valid~label,
+form .field input:disabled~label {
   top: 0%;
   font-size: 16px;
   color: #ff6600;
@@ -171,9 +201,11 @@ button {
   background: #ff6600;
   transition: all 0.3s ease;
 }
+
 button:disabled {
   opacity: 0.6;
 }
+
 button:enabled:active {
   transform: scale(0.95);
 }
@@ -193,6 +225,8 @@ button:enabled:active {
   width: 100%;
   z-index: 999;
 }
+
+/* LOADER*/
 
 .text-loader {
   position: relative;
@@ -216,19 +250,39 @@ button:enabled:active {
   from {
     width: 100%;
   }
+
   to {
     width: 0;
   }
 }
+
 /* END LOADER */
+
+/* MODAL */
+
+.disabled-back .title {
+  line-height: 50px;
+}
+
+.disabled-back .content {
+  line-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* END MODAL */
+
 @media (min-width: 280px) and (max-width: 320px) {
   .wrapper {
     width: 260px;
   }
+
   .container {
     grid-template-columns: 1fr;
     column-gap: 20px;
   }
+
   br {
     display: none;
   }
@@ -239,10 +293,12 @@ button:enabled:active {
     width: 300px;
     margin-top: 5rem;
   }
+
   .container {
     grid-template-columns: 1fr;
     column-gap: 15px;
   }
+
   br {
     display: none;
   }
@@ -252,10 +308,12 @@ button:enabled:active {
   .wrapper {
     width: 600px;
   }
+
   .container {
     grid-template-columns: 1fr 1fr;
     column-gap: 20px;
   }
+
   br {
     display: none;
   }
