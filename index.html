@@ -4,25 +4,38 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://unpkg.com/vue@3.0.2"></script>
-
-    <title>My App</title>
+    <!--Styles CSS-->
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Document</title>
   </head>
-
   <body>
-    <div id="app">
-      <!-- /************************************************************/ -->
-      <form>
-        <input v-model="usuario" />
-        <input v-model="clave" />
-       
-      </form>
-
-       <button @click="verificarCampos">Ingresar</button>
-
-      <!-- /************************************************************/ -->
+    <div id="app" class="main-container">
+      <div class="wrapper">
+        <div class="title">LOGIN FORM</div>
+        <form @submit.prevent="save">
+          <div class="field">
+            <input v-model="user" type="text" required id="position" />
+            <label for="position">POSITION</label>
+          </div>
+          <div class="field">
+            <input
+              v-model="password"
+              type="password"
+              id="password"
+              maxlength="4"
+              required
+            />
+            <label for="password">PASSWORD</label>
+          </div>
+          <br /><br />
+          <div class="field">
+            <button @click="checkFields">Login</button>
+          </div>
+        </form>
+      </div>
     </div>
-
-    <script src="main.js"></script>
   </body>
+  <!--VUE JS-->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="./main.js"></script>
 </html>

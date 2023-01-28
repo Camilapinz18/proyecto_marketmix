@@ -1,52 +1,50 @@
 const app = Vue.createApp({
   data () {
     return {
-      cargos: [
+      positions: [
         {
-          cargo: 'admin',
-          clave: 'adm1'
+          position: 'admin',
+          password: 'adm1'
         },
         {
-          cargo: 'secretario',
-          clave: 'scr1'
+          position: 'secretario',
+          password: 'scr1'
         },
         {
-          cargo: 'vendedor',
-          clave: 'ven1'
+          position: 'vendedor',
+          password: 'ven1'
         },
         {
-          cargo: 'ensamblador',
-          clave: 'ens1'
+          position: 'ensamblador',
+          password: 'ens1'
         }
       ],
-      usuario: '',
-      clave: ''
+      user: '',
+      password: ''
     }
   },
   methods: {
-    verificarDatos () {
-      console.log('verificar datos')
-      const isUsuario = this.cargos.find(
-        usuario => usuario.cargo === this.usuario.trim()
+    checkData () { 
+      const isUser = this.positions.find(
+        user => user.position === this.user.trim()
       )
-      if (isUsuario) {
-        if (isUsuario.clave.trim() === this.clave) {
-          alert('login exitoso')
-          this.usuario= '',
-          this.clave= ''
+      if (isUser) {
+        if (isUser.password.trim() === this.password) {
+          alert('Successful login')
+          this.user= '',
+          this.password= ''
         } else {
-          alert('Clave incorrecta')
+          alert('Wrong password')
         }
       } else {
-        alert('El nombre del usuario no existe o es incorrecto')
+        alert('The username is wrong or doesnt exists')
       }
     },
-    verificarCampos () {
-      console.log('verificar campos')
-      if (this.usuario === '' || this.clave === '') {
-        alert('Debe llenar todos los campos para continuar')
+    checkFields () {
+      if (this.user === '' || this.password === '') {
+        alert('You must fill all the fields to continue')
       } else {
-        this.verificarDatos()
+        this.checkData()
       }
     }
   }
