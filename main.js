@@ -100,21 +100,27 @@ const app = Vue.createApp({
     positionSelect (newValue) {
       console.log('Positionselected', this.positionSelect)
       this.isChange = false
+
+      const dataStored = JSON.parse(localStorage.getItem('usersData'))
+      const arrayWithData = []
+      arrayWithData.push(dataStored)
+
+      console.log('arrayWithData', arrayWithData)
       this.changeBtnChangeName()
       if (this.positionSelect) {
-        const user = this.usersData.find(element => element.name === newValue)
+        const user = arrayWithData[0].find(element => element.name === newValue)
         if (user) {
           this.salary = user.salary
           this.quantyShoes = null
           this.priceShoes = null
-          this.commision = null
           switch (user.name) {
             case 'assembler':
               this.maxQuantyShoes = user.maxQuantyShoes
               this.priceShoes = user.priceShoes
               break
             case 'seller':
-              this.commision = user.commision
+              this.commision5 = user.commision5
+              this.commision10 = user.commision510
               break
           }
         }
@@ -246,20 +252,20 @@ const app = Vue.createApp({
                 user.salary = this.salary
                 console.log('zzz', user)
                 this.modifyLocalStorage(user)
-              } 
+              }
               if (user.name === 'assembler') {
                 console.log('name', user)
                 user.salary = this.salary
-                user.maxQuantyShoes=this.maxQuantyShoes
-                user.priceShoes=this.priceShoes
+                user.maxQuantyShoes = this.maxQuantyShoes
+                user.priceShoes = this.priceShoes
                 console.log('ssss', user)
                 this.modifyLocalStorage(user)
               }
               if (user.name === 'seller') {
                 console.log('name', user)
                 user.salary = this.salary
-                user.commission5=this.commission5
-                user.commission10=this.commission10
+                user.commission5 = this.commission5
+                user.commission10 = this.commission10
                 console.log('llll', user)
                 this.modifyLocalStorage(user)
               }
@@ -309,8 +315,8 @@ const app = Vue.createApp({
       const dataToModify = JSON.parse(localStorage.getItem('usersData'))
       const objectToModify = dataToModify.find(
         userToModify => userToModify.name === user.name
-      ) 
-      Object.assign(objectToModify,user)
+      )
+      Object.assign(objectToModify, user)
       localStorage.setItem('usersData', JSON.stringify(dataToModify))
       console.log('añadido')
     },
