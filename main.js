@@ -1,5 +1,5 @@
 const app = Vue.createApp({
-  data() {
+  data () {
     return {
       accounts: [
         {
@@ -19,6 +19,7 @@ const app = Vue.createApp({
           password: 'asb1'
         }
       ],
+      dataToModify: [],
       userLogged: '',
       activeLogin: true,
       activeAdmin: false,
@@ -33,26 +34,16 @@ const app = Vue.createApp({
       password: '',
       isChange: false,
       btnChange: 'Change',
-      positionSelect: null,
-      salary: null,
-      maxQuantyShoes: null,
-      priceShoes: null,
-      commision: null,
+      positionSelect: 'seller',
       transportationAllowance: 140606,
       monthlyHours: 160,
       generalPayroll: [],
-      overtime: 0,
-      sales: 0,
-      producedShoes: 0,
-      children: 0,
-      commission5: 0,
-      commission10: 0,
       totalPayrolll: null,
       usersData: [
         {
           name: 'assembler',
           salary: null,
-          maxQuantyShoes: null,
+          maxQuantyShoes: 3100,
           shoesProduced: null,
           priceShoes: null,
           overtime: null,
@@ -67,39 +58,31 @@ const app = Vue.createApp({
           name: 'seller',
           salary: null,
           sales: null,
-          commission5: null,
-          commission10: null
+          commission5: 10,
+          commission10: 20
         }
-      ]
+      ],
     }
   },
-
-  watch: {
-    positionSelect (newValue) {
-      this.isChange = false
-      const dataStored = JSON.parse(localStorage.getItem('usersData'))
-      const arrayWithData = []
-      arrayWithData.push(dataStored)
-      this.changeBtnChangeName()
-      if (this.positionSelect) {
-        const user = arrayWithData[0].find(element => element.name === newValue)
-        if (user) {
-          this.salary = user.salary
-          this.quantyShoes = null
-          this.priceShoes = null
-          switch (user.name) {
-            case 'assembler':
-              this.maxQuantyShoes = user.maxQuantyShoes
-              this.priceShoes = user.priceShoes
-              break
-            case 'seller':
-              this.commision5 = user.commision5
-              this.commision10 = user.commision510
-              break
-          }
-        }
-      }
+  computed: {
+    currentSeller () {
+      return this.usersData.find(user => user.name === 'seller')
     },
+    currentAssembler () {
+      return this.usersData.find(user => user.name === 'assembler')
+    },
+    currentSecretary () {
+      return this.usersData.find(user => user.name === 'secretary')
+    },
+    currentUser () {
+      return this.usersData.find(user => user.name === this.positionSelect)
+    }
+  },
+  watch: {
+    positionSelect () {
+      this.isChange = false
+      this.changeBtnChangeName()
+    }
   },
   methods: {
     /*--GENERAL-- */
@@ -108,9 +91,9 @@ const app = Vue.createApp({
       this.messageError = message
       this.type = type
       setTimeout(() => {
-        this.isError = false;
-        this.messageError = "";
-      }, 2000);
+        this.isError = false
+        this.messageError = ''
+      }, 2000)
     },
     onLoadPage () {
       console.log('page refreshed')
@@ -123,29 +106,26 @@ const app = Vue.createApp({
         case 'admin':
           this.activeAdmin = false
           break
-
         case 'seller':
           this.activeSeller = false
           break
-
         case 'secretary':
           this.activeSecretary = false
           break
-
         case 'assembler':
           this.activeAssembler = false
           break
       }
     },
     modifyLocalStorage (user) {
-      const dataToModify = JSON.parse(localStorage.getItem('usersData'))
-      const objectToModify = dataToModify.find(
+      this.dataToModify = JSON.parse(localStorage.getItem('usersData'))
+      const objectToModify = this.dataToModify.find(
         userToModify => userToModify.name === user.name
       )
       Object.assign(objectToModify, user)
-      localStorage.setItem('usersData', JSON.stringify(dataToModify))
+      localStorage.setItem('usersData', JSON.stringify(this.dataToModify))
     },
-        clearForm () {
+    clearForm () {
       this.positionSelect = null
       this.quantyShoes = null
       this.priceShoes = null
@@ -214,7 +194,7 @@ const app = Vue.createApp({
       if (this.user === '' || this.password === '') {
         this.launchError('You must fill all the fields to continue', 'ERROR')
       } else {
-        this.checkData();
+        this.checkData()
       }
     },
     /*--ADMIN--*/
@@ -226,19 +206,19 @@ const app = Vue.createApp({
           )
           if (user) {
             if (user.name === 'secretary') {
-              user.salary = this.salary
+              user.salary = this.currentSecretary.salary
               this.modifyLocalStorage(user)
             }
             if (user.name === 'assembler') {
-              user.salary = this.salary
-              user.maxQuantyShoes = this.maxQuantyShoes
-              user.priceShoes = this.priceShoes
+              user.salary = this.currentAssembler.salary
+              user.maxQuantyShoes = this.currentAssembler.maxQuantyShoes
+              user.priceShoes = this.currentAssembler.priceShoes
               this.modifyLocalStorage(user)
             }
             if (user.name === 'seller') {
-              user.salary = this.salary
-              user.commission5 = this.commission5
-              user.commission10 = this.commission10
+              user.salary = this.currentSeller.salary
+              user.commission5 = this.currentSeller.commission5
+              user.commission10 = this.currentSeller.commission10
               this.modifyLocalStorage(user)
             }
             this.launchError('Changes saved', 'SUCCESSFUL')
@@ -250,62 +230,59 @@ const app = Vue.createApp({
           const secretary = this.usersData.find(
             element => element.name === 'secretary'
           )
-          secretary.overtime = this.overtime
+          secretary.overtime = this.currentSecretary.overtime
           this.modifyLocalStorage(secretary)
-          this.overtime=''
           this.launchError('Changes saved', 'SUCCESSFUL')
           break
         case 'seller':
           const seller = this.usersData.find(
             element => element.name === 'seller'
           )
-          seller.sales = this.sales
-          this.modifyLocalStorage(seller)
-          this.sales=''
+          seller.sales = this.currentSeller.sales
+          this.modifyLocalStorage(this.currentSeller)
           this.launchError('Changes saved', 'SUCCESSFUL')
           break
         case 'assembler':
           const assembler = this.usersData.find(
             element => element.name === 'assembler'
           )
-    
-          if (this.producedShoes > assembler.maxQuantyShoes) {
+          if (this.currentAssembler.shoesProduced > assembler.maxQuantyShoes) {
             this.launchError(
               `The production is higher than allowed: ${assembler.maxQuantyShoes}`,
               'ERROR'
             )
           } else {
-            assembler.overtime = this.overtime
-            assembler.shoesProduced = this.producedShoes
-            assembler.children = this.children
+            assembler.overtime = this.currentAssembler.overtime
+            assembler.shoesProduced = this.currentAssembler.shoesProduced
+            assembler.children = this.currentAssembler.children
             this.modifyLocalStorage(assembler)
-            this.overtime=''
-            this.producedShoes=''
-            this.children=''
             this.launchError('Changes saved', 'SUCCESSFUL')
           }
           break
       }
+      this.userData = JSON.parse(localStorage.getItem('usersData'))
+      this.positionSelect = 'assembler'
     },
-    change() {
-      this.isChange = !this.isChange;
-      this.changeBtnChangeName();
+    change () {
+      this.isChange = !this.isChange
+      this.changeBtnChangeName()
     },
-    changeBtnChangeName() {
+    changeBtnChangeName () {
       this.isChange
-        ? (this.btnChange = "No Change")
-        : (this.btnChange = "Change");
+        ? (this.btnChange = 'No Change')
+        : (this.btnChange = 'Change')
     },
     /*--PAYROLL--*/
     liquidateSeller () {
+      this.dataToModify = JSON.parse(localStorage.getItem('usersData'))
       let commission = 0
-      const sellerData = this.usersData.find(
+      const sellerData = this.dataToModify.find(
         employee => employee.name === 'seller'
       )
       if (sellerData.sales > 10000000) {
         commission = (sellerData.salary * sellerData.commission10) / 100
       } else if (sellerData.sales > 5000000) {
-        commission = (sellerData.salary * this.commission5) / 100
+        commission = (sellerData.salary * sellerData.commission5) / 100
       } else {
         commission = 0
       }
@@ -319,16 +296,15 @@ const app = Vue.createApp({
       }
       return reportData
     },
-
     liquidateAssembler () {
-      const assemblerData = this.usersData.find(
+      this.dataToModify = JSON.parse(localStorage.getItem('usersData'))
+      const assemblerData = this.dataToModify.find(
         employee => employee.name === 'assembler'
       )
       let hourCost = assemblerData.salary / this.monthlyHours
       let overtimeHourCost = (hourCost * 220) / 100
       let productionBonusByShoe = 0
       let childrenBonus = 0
-
       if (assemblerData.shoesProduced > 3000) {
         productionBonusByShoe =
           (assemblerData.priceShoes * 30) / 100 + assemblerData.priceShoes
@@ -349,14 +325,12 @@ const app = Vue.createApp({
       } else if (assemblerData.children >= 2) {
         childrenBonus = 60000 * assemblerData.children
       }
-
       const totalAssembler =
         assemblerData.salary +
         overtimeHourCost * assemblerData.overtime +
         productionBonusByShoe * assemblerData.shoesProduced +
         this.transportationAllowance +
         childrenBonus
-
       const reportData = {
         baseSalary: assemblerData.salary,
         overtimeCost: overtimeHourCost,
@@ -369,19 +343,17 @@ const app = Vue.createApp({
         childrenBonus: childrenBonus,
         totalSalary: totalAssembler
       }
-
       return reportData
     },
-
     liquidateSecretary () {
-      const secretaryData = this.usersData.find(
+      this.dataToModify = JSON.parse(localStorage.getItem('usersData'))
+      const secretaryData = this.dataToModify.find(
         employee => employee.name === 'secretary'
       )
       let hourCost = secretaryData.salary / this.monthlyHours
       let overtimeHourCost = (hourCost * 180) / 100
       const totalSecretary =
         secretaryData.salary + overtimeHourCost * secretaryData.overtime
-
       const reportData = {
         baseSalary: secretaryData.salary,
         overtimeCost: overtimeHourCost,
@@ -389,10 +361,8 @@ const app = Vue.createApp({
         overtimeTotal: overtimeHourCost * secretaryData.overtime,
         totalSalary: totalSecretary
       }
-
       return reportData
     },
-
     liquidateAll () {
       this.generalPayroll.push(this.liquidateAssembler())
       this.generalPayroll.push(this.liquidateSecretary())
@@ -401,8 +371,9 @@ const app = Vue.createApp({
       this.generalPayroll.map(g => (this.totalPayroll += g.totalSalary))
     },
     checkForCompleteEmployeesInfo () {
+      this.dataToModify = JSON.parse(localStorage.getItem('usersData'))
       let missingInfo = []
-      this.usersData.map(userData => {
+      this.dataToModify.map(userData => {
         values = Object.values(userData)
         isComplete = values.find(value => value === null)
         isComplete === null ? missingInfo.push(userData.name) : ''
@@ -410,6 +381,9 @@ const app = Vue.createApp({
       return missingInfo
     },
     generatePayroll () {
+      this.usersData = JSON.parse(localStorage.getItem('usersData'))
+      console.log('usersdata',this.usersData)
+      this.generalPayroll=[]
       const missingInfo = this.checkForCompleteEmployeesInfo()
       if (missingInfo.length) {
         this.launchError(
@@ -428,4 +402,4 @@ const app = Vue.createApp({
   }
 })
 
-app.mount("#app");
+app.mount('#app')

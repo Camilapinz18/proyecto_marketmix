@@ -57,7 +57,7 @@
                 id="salary"
                 placeholder="Salary"
                 required
-                v-model="salary"
+                v-model="currentUser.salary"
                 :disabled="isChange? false: true"
               />
               <label for="salary">Salary</label>
@@ -69,7 +69,7 @@
                 placeholder="Max shoes production"
                 required
                 :disabled="positionSelect ==='assembler' && isChange? false: true"
-                v-model="maxQuantyShoes"
+                v-model="currentAssembler.maxQuantyShoes"
               />
               <label for="maxQuantyShoes">Max shoes production</label>
             </div>
@@ -80,7 +80,7 @@
                 placeholder="Price shoes"
                 required
                 :disabled="positionSelect ==='assembler' && isChange? false: true"
-                v-model="priceShoes"
+                v-model="currentAssembler.priceShoes"
               />
               <label for="priceShoes">Price shoes</label>
             </div>
@@ -91,7 +91,7 @@
                 placeholder="Commision"
                 required
                 :disabled="positionSelect ==='seller' && isChange? false: true"
-                v-model="commission5"
+                v-model="currentSeller.commission5"
               />
               <label for="commision">Commision % > 5millions</label>
             </div>
@@ -102,7 +102,7 @@
                 placeholder="Commision"
                 required
                 :disabled="positionSelect ==='seller' && isChange? false: true"
-                v-model="commission10"
+                v-model="currentSeller.commission10"
               />
               <label for="commision">Commision % > 10millions</label>
             </div>
@@ -146,7 +146,7 @@
               id="overtime_s"
               placeholder="Overtime in hours"
               required
-              v-model="overtime"
+              v-model="currentSecretary.overtime"
             />
             <label for="overtime_s">Overtime (in hours)</label>
           </div>
@@ -169,7 +169,7 @@
               id="sales"
               placeholder="Sales"
               required
-              v-model="sales"
+              v-model="currentSeller.sales"
             />
             <label for="sales">Sales (in pesos)</label>
           </div>
@@ -191,7 +191,7 @@
               id="overtime"
               placeholder="Overtime (in hours)"
               required
-              v-model="overtime"
+              v-model="currentAssembler.overtime"
             />
             <label for="overtime">Overtime</label>
           </div>
@@ -201,7 +201,7 @@
               id="producedShoes"
               placeholder="producedShoes"
               required
-              v-model="producedShoes"
+              v-model="currentAssembler.shoesProduced"
             />
             <label for="producedShoes">producedShoes</label>
           </div>
@@ -211,7 +211,7 @@
               id="children"
               placeholder="Children"
               required
-              v-model="children"
+              v-model="currentAssembler.children"
             />
             <label for="children">Children</label>
           </div>
