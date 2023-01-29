@@ -11,6 +11,7 @@
   <body>
     <div id="app" class="main-container">
       <!--LOGIN-->
+
       <div v-if="activeLogin" class="wrapper">
         <div class="title">LOGIN FORM</div>
         <form @submit.prevent="save">
@@ -83,7 +84,6 @@
                 required
                 :disabled="positionSelect ==='assembler' && isChange? false: true"
                 v-model="priceShoes"
-                
               />
               <label for="priceShoes">Price shoes</label>
             </div>
@@ -130,7 +130,7 @@
             </button>
           </div>
           <div class="field">
-            <button v-on:click="generatePayroll('all')">
+            <button v-on:click="generatePayroll">
               Generate Payrolls
             </button>
           </div>
@@ -146,12 +146,12 @@
           <div class="field">
             <input
               type="number"
-              id="overtime"
+              id="overtime_s"
               placeholder="Overtime in hours"
               required
               v-model="overtime"
             />
-            <label for="overtime">Overtime (in hours)</label>
+            <label for="overtime_s">Overtime (in hours)</label>
           </div>
 
           <div class="field">
@@ -233,15 +233,15 @@
       <!--PAYROLL-->
       <div v-if="activePayroll" class="wrapper big-wrapper">
         <div class="title">PAYROLL REPORT</div>
-        {{ activePayroll }}
         <form @submit.prevent="save">
-          {{ generalPayroll }}
-
           <div class="wrapper">
             <div class="title">SECRETARY REPORT</div>
             <div class="report-container">
               <div class="items-table">
-                <div v-for="item in generalPayroll[1]" class="item">
+                <div
+                  v-for="item in Object.keys(generalPayroll[1])"
+                  class="item"
+                >
                   {{ item }}
                 </div>
               </div>
@@ -254,7 +254,56 @@
           </div>
 
           <div class="wrapper">
-            <p>dsnjfksdnk</p>
+            <div class="title">ASSEMBLER REPORT</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div
+                  v-for="item in Object.keys(generalPayroll[0])"
+                  class="item"
+                >
+                  {{ item }}
+                </div>
+              </div>
+              <div class="items-table">
+                <div v-for="item in generalPayroll[0]" class="item">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wrapper">
+            <div class="title">SELLER REPORT</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div
+                  v-for="item in Object.keys(generalPayroll[2])"
+                  class="item"
+                >
+                  {{ item }}
+                </div>
+              </div>
+              <div class="items-table">
+                <div v-for="item in generalPayroll[2]" class="item">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wrapper">
+            <div class="title">TOTAL PAYROLL</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div class="item">Total Payroll</div>
+              </div>
+
+              <div class="items-table">
+                <div class="item">
+                  {{ totalPayroll }}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="field">
@@ -270,8 +319,15 @@
         <h2 class="text-loader">{{ messageLoader }}<span>&#160;</span></h2>
       </div>
       <!--MessageError-->
-      <div v-if="isError">
-        <h2>{{ messageError }}</h2>
+      <div v-if="isError" class="disabled-back">
+        <div class="wrapper">
+          <div class="title">
+            <h5>ERROR</h5>
+          </div>
+          <div class="content">
+            <h5>{{ messageError }}</h5>
+          </div>
+        </div>
       </div>
     </div>
   </body>
