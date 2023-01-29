@@ -13,7 +13,7 @@
       <!--LOGIN-->
       <div v-if="activeLogin" class="wrapper">
         <div class="title">LOGIN FORM</div>
-        <form @submit.prevent="save">
+        <form @submit.prevent="checkFields">
           <div class="field">
             <input v-model="user" type="text" required id="position" />
             <label for="position">POSITION</label>
@@ -37,17 +37,16 @@
       <!--ADMIN-->
       <div v-if="activeAdmin" class="wrapper big-wrapper">
         <div class="title">ADMINISTRATOR</div>
-        <!--FORM-->
         <form @submit.prevent="save">
           <div class="container">
             <div class="field">
               <select required refs="position" v-model="positionSelect">
                 <option
-                  v-for="item in users"
+                  v-for="item in usersData"
                   v-bind:value="item.name"
                   :disabled="item.name === 'admin'"
                 >
-                  {{ item.name !== 'admin' ? item.name : "Select an option" }}
+                  {{ item.name !== 'admin' ? item.name : 'Select an option' }}
                 </option>
               </select>
               <label for="position">POSITION</label>
@@ -61,19 +60,18 @@
                 v-model="salary"
                 :disabled="isChange? false: true"
               />
-
               <label for="salary">Salary</label>
             </div>
             <div class="field">
               <input
                 type="number"
                 refs="maxQuantyShoes"
-                placeholder="Quanty shoes"
+                placeholder="Max shoes production"
                 required
                 :disabled="positionSelect ==='assembler' && isChange? false: true"
                 v-model="maxQuantyShoes"
               />
-              <label for="maxQuantyShoes">Quanty shoes</label>
+              <label for="maxQuantyShoes">Max shoes production</label>
             </div>
             <div class="field">
               <input
@@ -93,9 +91,20 @@
                 placeholder="Commision"
                 required
                 :disabled="positionSelect ==='seller' && isChange? false: true"
-                v-model="commision"
+                v-model="commission5"
               />
-              <label for="commision">Commision</label>
+              <label for="commision">Commision % > 5millions</label>
+            </div>
+            <div class="field">
+              <input
+                type="number"
+                refs="commision"
+                placeholder="Commision"
+                required
+                :disabled="positionSelect ==='seller' && isChange? false: true"
+                v-model="commission10"
+              />
+              <label for="commision">Commision % > 10millions</label>
             </div>
           </div>
         </form>
@@ -110,21 +119,193 @@
             </button>
           </div>
           <div class="field">
-            <button v-on:click="save" :disabled="!positionSelect ?true: false">
+            <button
+              v-on:click="save('admin')"
+              :disabled="!positionSelect ?true: false"
+            >
               Save
             </button>
           </div>
+          <div class="field">
+            <button v-on:click="generatePayroll">
+              Generate Payrolls
+            </button>
+          </div>
+          <div class="field">
+            <button v-on:click="logout('admin')">Logout</button>
+          </div>
         </div>
       </div>
-      <!--LOGIN-->
-      <div class="disabled-back" v-if="loader">
-        <h2 class="text-loader">{{ messageLoader }}<span>&#160;</span></h2>
+      <!--SECRETARY-->
+      <div v-if="activeSecretary" class="wrapper">
+        <div class="title">SECRETARY</div>
+        <form @submit.prevent="save">
+          <div class="field">
+            <input
+              type="number"
+              id="overtime_s"
+              placeholder="Overtime in hours"
+              required
+              v-model="overtime"
+            />
+            <label for="overtime_s">Overtime (in hours)</label>
+          </div>
+          <div class="field">
+            <button v-on:click="save('secretary')"
+            >Save</button>
+          </div>
+        </form>
+        <div class="field">
+          <button v-on:click="logout('secretary')">Logout</button>
+        </div>
+      </div>
+      <!--SELLER-->
+      <div v-if="activeSeller" class="wrapper">
+        <div class="title">SELLER</div>
+        <form @submit.prevent="save">
+          <div class="field">
+            <input
+              type="number"
+              id="sales"
+              placeholder="Sales"
+              required
+              v-model="sales"
+            />
+            <label for="sales">Sales (in pesos)</label>
+          </div>
+          <div class="field">
+            <button v-on:click="save('seller')">Save</button>
+          </div>
+        </form>
+        <div class="field">
+          <button v-on:click="logout('seller')">Logout</button>
+        </div>
+      </div>
+      <!--ASSEMBLER-->
+      <div v-if="activeAssembler" class="wrapper">
+        <div class="title">ASSEMBLER</div>
+        <form @submit.prevent="save">
+          <div class="field">
+            <input
+              type="number"
+              id="overtime"
+              placeholder="Overtime (in hours)"
+              required
+              v-model="overtime"
+            />
+            <label for="overtime">Overtime</label>
+          </div>
+          <div class="field">
+            <input
+              type="number"
+              id="producedShoes"
+              placeholder="producedShoes"
+              required
+              v-model="producedShoes"
+            />
+            <label for="producedShoes">producedShoes</label>
+          </div>
+          <div class="field">
+            <input
+              type="number"
+              id="children"
+              placeholder="Children"
+              required
+              v-model="children"
+            />
+            <label for="children">Children</label>
+          </div>
+          <div class="field">
+            <button v-on:click="save('assembler')">Save</button>
+          </div>
+        </form>
+        <div class="field">
+          <button v-on:click="logout('assembler')">Logout</button>
+        </div>
+      </div>
+      <!--PAYROLL-->
+      <div v-if="activePayroll" class="wrapper big-wrapper">
+        <div class="title">PAYROLL REPORT</div>
+        <form>
+          <div class="wrapper">
+            <div class="title">SECRETARY REPORT</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div
+                  v-for="item in Object.keys(generalPayroll[1])"
+                  class="item"
+                >
+                  {{ item }}
+                </div>
+              </div>
+              <div class="items-table">
+                <div v-for="item in generalPayroll[1]" class="item">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper">
+            <div class="title">ASSEMBLER REPORT</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div
+                  v-for="item in Object.keys(generalPayroll[0])"
+                  class="item"
+                >
+                  {{ item }}
+                </div>
+              </div>
+              <div class="items-table">
+                <div v-for="item in generalPayroll[0]" class="item">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper">
+            <div class="title">SELLER REPORT</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div
+                  v-for="item in Object.keys(generalPayroll[2])"
+                  class="item"
+                >
+                  {{ item }}
+                </div>
+              </div>
+              <div class="items-table">
+                <div v-for="item in generalPayroll[2]" class="item">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper">
+            <div class="title">TOTAL PAYROLL</div>
+            <div class="report-container">
+              <div class="items-table">
+                <div class="item">Total Payroll</div>
+              </div>
+              <div class="items-table">
+                <div class="item">
+                  {{ totalPayroll }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <button v-on:click="activeAdmin=true;activePayroll=false">
+              Go back
+            </button>
+          </div>
+        </form>
       </div>
       <!--MessageError-->
       <div v-if="isError" class="disabled-back">
         <div class="wrapper">
           <div class="title">
-            <h5>ERROR</h5>
+            <h5>{{type}}</h5>
           </div>
           <div class="content">
             <h5>{{ messageError }}</h5>

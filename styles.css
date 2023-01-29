@@ -6,6 +6,7 @@
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+
 * {
   margin: 0;
   padding: 0;
@@ -13,6 +14,7 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
 body {
   height: 100vh;
   width: 100%;
@@ -22,9 +24,11 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
+
 d-flex {
   display: flex;
 }
+
 d-none {
   display: none;
 }
@@ -35,7 +39,9 @@ d-none {
 
 .m-2 {
   margin: 2rem;
+  width: 65%;
 }
+
 .main-container {
   display: flex;
   justify-content: center;
@@ -49,16 +55,24 @@ d-none {
   grid-template-columns: 1fr 1fr 1fr;
   column-gap: 20px;
 }
+
 .wrapper,
 .big-wrapper {
   width: 500px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.1);
+  margin: 60px;
+  align-self: flex-start;
 }
+
 .big-wrapper {
   width: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 .wrapper .title {
   font-size: 35px;
   font-weight: 600;
@@ -68,15 +82,36 @@ d-none {
   user-select: none;
   border-radius: 15px 15px 0 0;
   background: #ff6600;
+  width: 100%;
 }
+
 .wrapper form {
   padding: 10px 30px 50px 30px;
 }
+
 .field {
   height: 50px;
   width: 100%;
   margin-top: 20px;
   position: relative;
+}
+
+
+
+.item {
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid #B4B4B4;
+  padding: 5px;
+}
+
+.items-table {
+  width: 50%;
+}
+
+.report-container {
+  display: flex;
+  flex-direction: row;
 }
 
 input,
@@ -91,6 +126,7 @@ button {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
 input:focus,
 input:valid,
 select:focus,
@@ -98,6 +134,7 @@ select:valid {
   border-color: #ff6600;
   outline: none;
 }
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -111,7 +148,7 @@ select {
   -moz-appearance: none;
   -o-appearance: none;
   appearance: none;
-  background-image: url(./assets/select-Icon.svg); /*aquí deberás escribir la ruta de la imagen que utilizarás como flecha del desplegable*/
+  background-image: url(./assets/select-Icon.svg);
   background-repeat: no-repeat;
   background-size: 25px;
   background-position: right center;
@@ -140,11 +177,12 @@ input:disabled {
   transform: translateY(-50%);
   transition: all 0.3s ease;
 }
-form .field input:focus ~ label,
-form .field input:valid ~ label,
-form .field select:focus ~ label,
-form .field select:valid ~ label,
-form .field input:disabled ~ label {
+
+form .field input:focus~label,
+form .field input:valid~label,
+form .field select:focus~label,
+form .field select:valid~label,
+form .field input:disabled~label {
   top: 0%;
   font-size: 16px;
   color: #ff6600;
@@ -171,58 +209,25 @@ button {
   background: #ff6600;
   transition: all 0.3s ease;
 }
+
 button:disabled {
   opacity: 0.6;
 }
+
 button:enabled:active {
   transform: scale(0.95);
 }
 
-.disabled-back {
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.804);
-  bottom: 0;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  left: 0;
-  min-height: 100vh;
-  padding: 10px 0;
-  position: fixed;
-  width: 100%;
-  z-index: 999;
-}
-/* LOADER*/
-
-.text-loader {
-  position: relative;
-  float: left;
-  background-color: rgba(255, 255, 255, 0.804);
-  color: #000;
-  font-size: 2.5em;
-}
-
-.text-loader span {
-  position: absolute;
-  right: 0;
-  width: 0;
-  height: 50px;
-  background-color: rgba(255, 255, 255, 0.804);
-  border-left: 1px solid #000;
-  /* animation: escribir 5s steps(30) infinite alternate; */
-}
-
-@keyframes escribir {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0;
-  }
-}
-/* END LOADER */
-
 /* MODAL */
+.disabled-back {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .disabled-back .title {
   line-height: 50px;
@@ -234,30 +239,43 @@ button:enabled:active {
   justify-content: center;
   align-items: center;
 }
+
+.content{
+text-align: center;
+font-size: 20px;
+
+}
+
 /* END MODAL */
 
 @media (min-width: 280px) and (max-width: 320px) {
   .wrapper {
     width: 260px;
   }
+
   .container {
     grid-template-columns: 1fr;
     column-gap: 20px;
   }
+
   br {
     display: none;
   }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 600px) {
   .wrapper {
-    width: 300px;
+    width: 90%;
     margin-top: 5rem;
+    margin: 0 auto;
   }
+
   .container {
     grid-template-columns: 1fr;
     column-gap: 15px;
+
   }
+
   br {
     display: none;
   }
@@ -267,10 +285,13 @@ button:enabled:active {
   .wrapper {
     width: 600px;
   }
+
   .container {
     grid-template-columns: 1fr 1fr;
     column-gap: 20px;
+   
   }
+
   br {
     display: none;
   }

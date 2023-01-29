@@ -15,7 +15,7 @@ const app = Vue.createApp({
           password: 'sll1'
         },
         {
-          name: 'aassembler',
+          name: 'assembler',
           password: 'asb1'
         }
       ],
@@ -25,14 +25,14 @@ const app = Vue.createApp({
       activeSeller: false,
       activeSecretary: false,
       activeAssembler: false,
-      isError: true,
+      activePayroll: false,
+      isError: false,
       messageError: '',
+      type: '',
       user: '',
       password: '',
       isChange: false,
-      btnChange: "Change",
-      loader: false,
-      messageLoader: "",
+      btnChange: 'Change',
       positionSelect: null,
       salary: null,
       maxQuantyShoes: null,
@@ -41,49 +41,60 @@ const app = Vue.createApp({
       transportationAllowance: 140606,
       monthlyHours: 160,
       generalPayroll: [],
+      overtime: 0,
+      sales: 0,
+      producedShoes: 0,
+      children: 0,
+      commission5: 0,
+      commission10: 0,
+      totalPayrolll: null,
       usersData: [
         {
           name: 'assembler',
-          salary: 1300000,
-          maxQuantyShoes: 500,
-          shoesProduced: 1001,
-          priceShoes: 25000,
-          overtime: 7,
-          children: 3
-        },
-        {
-          name: 'seller',
-          salary: 1400000,
-          sales: 1000000,
-          commission: 600
+          salary: null,
+          maxQuantyShoes: null,
+          shoesProduced: null,
+          priceShoes: null,
+          overtime: null,
+          children: null
         },
         {
           name: 'secretary',
-          salary: 1500000,
-          overtime: 7
+          salary: null,
+          overtime: null
+        },
+        {
+          name: 'seller',
+          salary: null,
+          sales: null,
+          commission5: null,
+          commission10: null
         }
       ]
     }
   },
 
   watch: {
-    positionSelect(newValue) {
-      this.isChange = false;
-      this.changeBtnChangeName();
+    positionSelect (newValue) {
+      this.isChange = false
+      const dataStored = JSON.parse(localStorage.getItem('usersData'))
+      const arrayWithData = []
+      arrayWithData.push(dataStored)
+      this.changeBtnChangeName()
       if (this.positionSelect) {
-        const user = this.usersData.find(element => element.name === newValue)
+        const user = arrayWithData[0].find(element => element.name === newValue)
         if (user) {
           this.salary = user.salary
-          maxQhis.quantyShoes = null
+          this.quantyShoes = null
           this.priceShoes = null
-          this.commision = null
           switch (user.name) {
             case 'assembler':
-              maxQhis.quantyShoes = user.quantyShoes
+              this.maxQuantyShoes = user.maxQuantyShoes
               this.priceShoes = user.priceShoes
               break
             case 'seller':
-              this.commision = user.commision
+              this.commision5 = user.commision5
+              this.commision10 = user.commision510
               break
           }
         }
@@ -92,9 +103,10 @@ const app = Vue.createApp({
   },
   methods: {
     /*--GENERAL-- */
-    launchError(message) {
-      this.isError = true;
-      this.messageError = message;
+    launchError (message, type) {
+      this.isError = true
+      this.messageError = message
+      this.type = type
       setTimeout(() => {
         this.isError = false;
         this.messageError = "";
@@ -103,28 +115,59 @@ const app = Vue.createApp({
     onLoadPage () {
       console.log('page refreshed')
       this.checkIsAlreadyLogged()
-      this.generatePayroll('all')
+    },
+    logout (active) {
+      this.activeLogin = true
+      localStorage.removeItem('userLogged')
+      switch (active) {
+        case 'admin':
+          this.activeAdmin = false
+          break
+
+        case 'seller':
+          this.activeSeller = false
+          break
+
+        case 'secretary':
+          this.activeSecretary = false
+          break
+
+        case 'assembler':
+          this.activeAssembler = false
+          break
+      }
+    },
+    modifyLocalStorage (user) {
+      const dataToModify = JSON.parse(localStorage.getItem('usersData'))
+      const objectToModify = dataToModify.find(
+        userToModify => userToModify.name === user.name
+      )
+      Object.assign(objectToModify, user)
+      localStorage.setItem('usersData', JSON.stringify(dataToModify))
+    },
+        clearForm () {
+      this.positionSelect = null
+      this.quantyShoes = null
+      this.priceShoes = null
+      this.commision = null
     },
     /*--LOGIN--*/
     checkIsAlreadyLogged () {
       if (localStorage.getItem('userLogged')) {
         this.userLogged = JSON.parse(localStorage.getItem('userLogged'))
-        switch (this.userLogged.name) {
+        switch (this.userLogged) {
           case 'admin':
             this.activeLogin = false
             this.activeAdmin = true
             break
-
           case 'seller':
             this.activeLogin = false
             this.activeSeller = true
             break
-
           case 'secretary':
             this.activeLogin = false
             this.activeSecretary = true
             break
-
           case 'assembler':
             this.activeLogin = false
             this.activeAssembler = true
@@ -136,55 +179,113 @@ const app = Vue.createApp({
       const isUser = this.accounts.find(user => user.name === this.user.trim())
       if (isUser) {
         if (isUser.password.trim() === this.password) {
+          localStorage.setItem(
+            'usersData',
+            JSON.stringify(localStorage.getItem('usersData'))
+          ) || localStorage.setItem('usersData', JSON.stringify(this.usersData))
+          switch (isUser.name) {
+            case 'admin':
+              this.activeLogin = false
+              this.activeAdmin = true
+              break
+            case 'seller':
+              this.activeLogin = false
+              this.activeSeller = true
+              break
+            case 'secretary':
+              this.activeLogin = false
+              this.activeSecretary = true
+              break
+            case 'assembler':
+              this.activeLogin = false
+              this.activeAssembler = true
+              break
+          }
           ;(this.user = ''), (this.password = '')
-          this.activeLogin = false
-          this.activeAdmin = true
-          this.launchError('Successful login')
-          console.log('isUser', isUser)
-          localStorage.setItem('userLogged', JSON.stringify(isUser))
+          localStorage.setItem('userLogged', JSON.stringify(isUser.name))
         } else {
-          this.launchError("Wrong password");
+          this.launchError('Wrong password', 'ERROR')
         }
       } else {
-        this.launchError("The username is wrong or doesnt exists");
+        this.launchError('The username is wrong or doesnt exists', 'ERROR')
       }
     },
-    checkFields() {
-      if (this.user === "" || this.password === "") {
-        this.launchError("You must fill all the fields to continue");
+    checkFields () {
+      if (this.user === '' || this.password === '') {
+        this.launchError('You must fill all the fields to continue', 'ERROR')
       } else {
         this.checkData();
       }
     },
     /*--ADMIN--*/
-    save() {
-      this.messageLoader = "Please wait...";
-      this.changeLoaderState();
-      setTimeout(() => {
-        const user = this.users.find(
-          (element) => element.name === this.positionSelect
-        );
-        if (user) {
-          user.salary = this.salary;
-          switch (user.name) {
-            case "assembler":
-              user.maxQuantyShoes = this.quantyShoes;
-              user.priceShoes = this.priceShoes;
-              break;
-            case "seller":
-              user.commision = this.commision;
-              break;
+    save (user) {
+      switch (user) {
+        case 'admin':
+          const user = this.usersData.find(
+            element => element.name === this.positionSelect
+          )
+          if (user) {
+            if (user.name === 'secretary') {
+              user.salary = this.salary
+              this.modifyLocalStorage(user)
+            }
+            if (user.name === 'assembler') {
+              user.salary = this.salary
+              user.maxQuantyShoes = this.maxQuantyShoes
+              user.priceShoes = this.priceShoes
+              this.modifyLocalStorage(user)
+            }
+            if (user.name === 'seller') {
+              user.salary = this.salary
+              user.commission5 = this.commission5
+              user.commission10 = this.commission10
+              this.modifyLocalStorage(user)
+            }
+            this.launchError('Changes saved', 'SUCCESSFUL')
           }
-          this.users.splice(
-            this.users.findIndex((u) => u.name === this.positionSelect),
-            1,
-            user
-          );
-        }
-        this.changeLoaderState()
-        this.changeBtnChangeName()
-        this.clearForm()
-      }, 1000)
+          this.changeBtnChangeName()
+          this.clearForm()
+          break
+        case 'secretary':
+          const secretary = this.usersData.find(
+            element => element.name === 'secretary'
+          )
+          secretary.overtime = this.overtime
+          this.modifyLocalStorage(secretary)
+          this.overtime=''
+          this.launchError('Changes saved', 'SUCCESSFUL')
+          break
+        case 'seller':
+          const seller = this.usersData.find(
+            element => element.name === 'seller'
+          )
+          seller.sales = this.sales
+          this.modifyLocalStorage(seller)
+          this.sales=''
+          this.launchError('Changes saved', 'SUCCESSFUL')
+          break
+        case 'assembler':
+          const assembler = this.usersData.find(
+            element => element.name === 'assembler'
+          )
+    
+          if (this.producedShoes > assembler.maxQuantyShoes) {
+            this.launchError(
+              `The production is higher than allowed: ${assembler.maxQuantyShoes}`,
+              'ERROR'
+            )
+          } else {
+            assembler.overtime = this.overtime
+            assembler.shoesProduced = this.producedShoes
+            assembler.children = this.children
+            this.modifyLocalStorage(assembler)
+            this.overtime=''
+            this.producedShoes=''
+            this.children=''
+            this.launchError('Changes saved', 'SUCCESSFUL')
+          }
+          break
+      }
     },
     change() {
       this.isChange = !this.isChange;
@@ -195,68 +296,54 @@ const app = Vue.createApp({
         ? (this.btnChange = "No Change")
         : (this.btnChange = "Change");
     },
-    changeLoaderState() {
-      this.loader = !this.loader;
-    },
-    clearForm () {
-      this.positionSelect = null
-      this.quantyShoes = null
-      this.priceShoes = null
-      this.commision = null
-    },
-    /*--LIQUIDAACION--*/
-
+    /*--PAYROLL--*/
     liquidateSeller () {
       let commission = 0
       const sellerData = this.usersData.find(
         employee => employee.name === 'seller'
       )
       if (sellerData.sales > 10000000) {
-        console.log('mayores a 10p')
-        commission = (sellerData.salary * 20) / 100
+        commission = (sellerData.salary * sellerData.commission10) / 100
       } else if (sellerData.sales > 5000000) {
-        console.log('mayores a 5p')
-        commission = (sellerData.salary * 10) / 100
+        commission = (sellerData.salary * this.commission5) / 100
       } else {
         commission = 0
       }
       const totalSeller =
         sellerData.salary + commission + this.transportationAllowance
-
-      return totalSeller
+      const reportData = {
+        baseSalary: sellerData.salary,
+        totalSales: sellerData.sales,
+        bonusBySales: commission,
+        totalSalary: totalSeller
+      }
+      return reportData
     },
 
     liquidateAssembler () {
       const assemblerData = this.usersData.find(
         employee => employee.name === 'assembler'
       )
-
-      var hourCost = assemblerData.salary / this.monthlyHours
-      var overtimeHourCost = (hourCost * 220) / 100
-      var productionBonusByShoe = 0
-      var childrenBonus = 0
+      let hourCost = assemblerData.salary / this.monthlyHours
+      let overtimeHourCost = (hourCost * 220) / 100
+      let productionBonusByShoe = 0
+      let childrenBonus = 0
 
       if (assemblerData.shoesProduced > 3000) {
         productionBonusByShoe =
           (assemblerData.priceShoes * 30) / 100 + assemblerData.priceShoes
-        console.log('productionBonusByShoe', productionBonusByShoe)
       } else if (assemblerData.shoesProduced > 2000) {
         productionBonusByShoe =
           (assemblerData.priceShoes * 20) / 100 + assemblerData.priceShoes
-        console.log('productionBonusByShoe', productionBonusByShoe)
       } else if (assemblerData.shoesProduced > 1700) {
         productionBonusByShoe =
           (assemblerData.priceShoes * 15) / 100 + assemblerData.priceShoes
-        console.log('productionBonusByShoe', productionBonusByShoe)
       } else if (assemblerData.shoesProduced > 1000) {
         productionBonusByShoe =
           (assemblerData.priceShoes * 10) / 100 + assemblerData.priceShoes
-        console.log('productionBonusByShoe', productionBonusByShoe)
       } else {
         productionBonusByShoe = 0
-        console.log('productionBonusByShoe', productionBonusByShoe)
       }
-
       if (assemblerData.children === 1) {
         childrenBonus = 80000
       } else if (assemblerData.children >= 2) {
@@ -270,48 +357,69 @@ const app = Vue.createApp({
         this.transportationAllowance +
         childrenBonus
 
-      return totalAssembler
+      const reportData = {
+        baseSalary: assemblerData.salary,
+        overtimeCost: overtimeHourCost,
+        overtimeHours: assemblerData.overtime,
+        overtimeTotal: overtimeHourCost * assemblerData.overtime,
+        shoesProduced: assemblerData.shoesProduced,
+        bonusPerShoe: productionBonusByShoe,
+        CostShoesProduced: productionBonusByShoe * assemblerData.shoesProduced,
+        transportationAllowance: this.transportationAllowance,
+        childrenBonus: childrenBonus,
+        totalSalary: totalAssembler
+      }
+
+      return reportData
     },
 
     liquidateSecretary () {
       const secretaryData = this.usersData.find(
         employee => employee.name === 'secretary'
       )
-      var hourCost = secretaryData.salary / this.monthlyHours
-      var overtimeHourCost = (hourCost * 180) / 100
+      let hourCost = secretaryData.salary / this.monthlyHours
+      let overtimeHourCost = (hourCost * 180) / 100
       const totalSecretary =
         secretaryData.salary + overtimeHourCost * secretaryData.overtime
-      return totalSecretary
+
+      const reportData = {
+        baseSalary: secretaryData.salary,
+        overtimeCost: overtimeHourCost,
+        overtimeHours: secretaryData.overtime,
+        overtimeTotal: overtimeHourCost * secretaryData.overtime,
+        totalSalary: totalSecretary
+      }
+
+      return reportData
     },
 
     liquidateAll () {
       this.generalPayroll.push(this.liquidateAssembler())
       this.generalPayroll.push(this.liquidateSecretary())
       this.generalPayroll.push(this.liquidateSeller())
-      return this.generalPayroll.reduce((acc, cur) => acc + cur)
+      this.totalPayroll = 0
+      this.generalPayroll.map(g => (this.totalPayroll += g.totalSalary))
     },
-    generatePayroll (employee) {
-      const transportationAllowance = 140606
-      const totalSeller = 0
-      const totalSecretary = 0
-      const totalAssembler = 0
-
-      switch (employee) {
-        case 'seller':
-          console.log('totalseller', this.liquidateSeller())
-          break
-
-        case 'secretary':
-          console.log('totalassembler', this.liquidateSecretary())
-          break
-
-        case 'assembler':
-          console.log('totalsecreatry', this.liquidateAssembler())
-          break
-
-        case 'all':
-          console.log('totalEmoresa', this.liquidateAll())
-          break
+    checkForCompleteEmployeesInfo () {
+      let missingInfo = []
+      this.usersData.map(userData => {
+        values = Object.values(userData)
+        isComplete = values.find(value => value === null)
+        isComplete === null ? missingInfo.push(userData.name) : ''
+      })
+      return missingInfo
+    },
+    generatePayroll () {
+      const missingInfo = this.checkForCompleteEmployeesInfo()
+      if (missingInfo.length) {
+        this.launchError(
+          `Failed generating payrolls. There is some missing information in ${missingInfo}`,
+          'ERROR'
+        )
+      } else {
+        this.liquidateAll()
+        this.activeAdmin = false
+        this.activePayroll = true
       }
     }
   },
