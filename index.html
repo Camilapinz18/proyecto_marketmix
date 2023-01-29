@@ -11,10 +11,9 @@
   <body>
     <div id="app" class="main-container">
       <!--LOGIN-->
-
       <div v-if="activeLogin" class="wrapper">
         <div class="title">LOGIN FORM</div>
-        <form @submit.prevent="save">
+        <form>
           <div class="field">
             <input v-model="user" type="text" required id="position" />
             <label for="position">POSITION</label>
@@ -38,7 +37,6 @@
       <!--ADMIN-->
       <div v-if="activeAdmin" class="wrapper big-wrapper">
         <div class="title">ADMINISTRATOR</div>
-        <!--FORM-->
         <form @submit.prevent="save">
           <div class="container">
             <div class="field">
@@ -62,7 +60,6 @@
                 v-model="salary"
                 :disabled="isChange? false: true"
               />
-
               <label for="salary">Salary</label>
             </div>
             <div class="field">
@@ -153,9 +150,9 @@
             />
             <label for="overtime_s">Overtime (in hours)</label>
           </div>
-
           <div class="field">
-            <button v-on:click="save('secretary')">Save</button>
+            <button v-on:click="save('secretary')"
+            >Save</button>
           </div>
         </form>
         <div class="field">
@@ -176,7 +173,6 @@
             />
             <label for="sales">Sales (in pesos)</label>
           </div>
-
           <div class="field">
             <button v-on:click="save('seller')">Save</button>
           </div>
@@ -199,7 +195,6 @@
             />
             <label for="overtime">Overtime</label>
           </div>
-
           <div class="field">
             <input
               type="number"
@@ -210,7 +205,6 @@
             />
             <label for="producedShoes">producedShoes</label>
           </div>
-
           <div class="field">
             <input
               type="number"
@@ -221,7 +215,6 @@
             />
             <label for="children">Children</label>
           </div>
-
           <div class="field">
             <button v-on:click="save('assembler')">Save</button>
           </div>
@@ -233,7 +226,7 @@
       <!--PAYROLL-->
       <div v-if="activePayroll" class="wrapper big-wrapper">
         <div class="title">PAYROLL REPORT</div>
-        <form @submit.prevent="save">
+        <form>
           <div class="wrapper">
             <div class="title">SECRETARY REPORT</div>
             <div class="report-container">
@@ -252,7 +245,6 @@
               </div>
             </div>
           </div>
-
           <div class="wrapper">
             <div class="title">ASSEMBLER REPORT</div>
             <div class="report-container">
@@ -271,7 +263,6 @@
               </div>
             </div>
           </div>
-
           <div class="wrapper">
             <div class="title">SELLER REPORT</div>
             <div class="report-container">
@@ -290,14 +281,12 @@
               </div>
             </div>
           </div>
-
           <div class="wrapper">
             <div class="title">TOTAL PAYROLL</div>
             <div class="report-container">
               <div class="items-table">
                 <div class="item">Total Payroll</div>
               </div>
-
               <div class="items-table">
                 <div class="item">
                   {{ totalPayroll }}
@@ -305,7 +294,6 @@
               </div>
             </div>
           </div>
-
           <div class="field">
             <button v-on:click="activeAdmin=true;activePayroll=false">
               Go back
@@ -313,16 +301,11 @@
           </div>
         </form>
       </div>
-
-      <!--LOGIN-->
-      <div class="disabled-back" v-if="loader">
-        <h2 class="text-loader">{{ messageLoader }}<span>&#160;</span></h2>
-      </div>
       <!--MessageError-->
       <div v-if="isError" class="disabled-back">
         <div class="wrapper">
           <div class="title">
-            <h5>ERROR</h5>
+            <h5>{{type}}</h5>
           </div>
           <div class="content">
             <h5>{{ messageError }}</h5>
