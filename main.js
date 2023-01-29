@@ -252,6 +252,7 @@ const app = Vue.createApp({
           )
           secretary.overtime = this.overtime
           this.modifyLocalStorage(secretary)
+          this.overtime=''
           this.launchError('Changes saved', 'SUCCESSFUL')
           break
         case 'seller':
@@ -260,22 +261,27 @@ const app = Vue.createApp({
           )
           seller.sales = this.sales
           this.modifyLocalStorage(seller)
+          this.sales=''
           this.launchError('Changes saved', 'SUCCESSFUL')
           break
         case 'assembler':
           const assembler = this.usersData.find(
             element => element.name === 'assembler'
           )
-          assembler.overtime = this.overtime
-          assembler.shoesProduced = this.producedShoes
+    
           if (this.producedShoes > assembler.maxQuantyShoes) {
             this.launchError(
               `The production is higher than allowed: ${assembler.maxQuantyShoes}`,
               'ERROR'
             )
           } else {
+            assembler.overtime = this.overtime
+            assembler.shoesProduced = this.producedShoes
             assembler.children = this.children
             this.modifyLocalStorage(assembler)
+            this.overtime=''
+            this.producedShoes=''
+            this.children=''
             this.launchError('Changes saved', 'SUCCESSFUL')
           }
           break

@@ -13,7 +13,7 @@
       <!--LOGIN-->
       <div v-if="activeLogin" class="wrapper">
         <div class="title">LOGIN FORM</div>
-        <form>
+        <form @submit.prevent="checkFields">
           <div class="field">
             <input v-model="user" type="text" required id="position" />
             <label for="position">POSITION</label>
