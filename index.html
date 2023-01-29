@@ -83,6 +83,7 @@
                 required
                 :disabled="positionSelect ==='assembler' && isChange? false: true"
                 v-model="priceShoes"
+                
               />
               <label for="priceShoes">Price shoes</label>
             </div>
@@ -93,7 +94,7 @@
                 placeholder="Commision"
                 required
                 :disabled="positionSelect ==='seller' && isChange? false: true"
-                v-model="commision"
+                v-model="commission5"
               />
               <label for="commision">Commision % > 5millions</label>
             </div>
@@ -104,7 +105,7 @@
                 placeholder="Commision"
                 required
                 :disabled="positionSelect ==='seller' && isChange? false: true"
-                v-model="commision"
+                v-model="commission10"
               />
               <label for="commision">Commision % > 10millions</label>
             </div>

@@ -46,6 +46,8 @@ const app = Vue.createApp({
       sales: 0,
       producedShoes: 0,
       children: 0,
+      commission5: 10,
+      commission10: 20,
       // usersData: [
       //   {
       //     name: 'assembler',
@@ -79,15 +81,16 @@ const app = Vue.createApp({
           children: 3
         },
         {
-          name: 'seller',
-          salary: 1200000,
-          sales: 6200300,
-          commission: 0
-        },
-        {
           name: 'secretary',
           salary: 1500000,
           overtime: 10
+        },
+        {
+          name: 'seller',
+          salary: 1200000,
+          sales: 6200300,
+          commission5: 10,
+          commission10: 20
         }
       ]
     }
@@ -95,6 +98,7 @@ const app = Vue.createApp({
 
   watch: {
     positionSelect (newValue) {
+      console.log('Positionselected', this.positionSelect)
       this.isChange = false
       this.changeBtnChangeName()
       if (this.positionSelect) {
@@ -106,7 +110,7 @@ const app = Vue.createApp({
           this.commision = null
           switch (user.name) {
             case 'assembler':
-              this.quantyShoes = user.quantyShoes
+              this.maxQuantyShoes = user.maxQuantyShoes
               this.priceShoes = user.priceShoes
               break
             case 'seller':
@@ -156,7 +160,7 @@ const app = Vue.createApp({
     checkIsAlreadyLogged () {
       if (localStorage.getItem('userLogged')) {
         this.userLogged = JSON.parse(localStorage.getItem('userLogged'))
-        switch (this.userLogged.name) {
+        switch (this.userLogged) {
           case 'admin':
             this.activeLogin = false
             this.activeAdmin = true
@@ -183,6 +187,7 @@ const app = Vue.createApp({
       const isUser = this.accounts.find(user => user.name === this.user.trim())
       if (isUser) {
         if (isUser.password.trim() === this.password) {
+          localStorage.setItem('usersData', JSON.stringify(this.usersData))
           switch (isUser.name) {
             case 'admin':
               this.activeLogin = false
@@ -206,7 +211,7 @@ const app = Vue.createApp({
           }
           ;(this.user = ''), (this.password = '')
 
-          localStorage.setItem('userLogged', JSON.stringify(isUser))
+          localStorage.setItem('userLogged', JSON.stringify(isUser.name))
         } else {
           this.launchError('Wrong password')
         }
@@ -228,28 +233,38 @@ const app = Vue.createApp({
 
       switch (user) {
         case 'admin':
-          console.log('admin')
           setTimeout(() => {
             const user = this.usersData.find(
               element => element.name === this.positionSelect
             )
+
             if (user) {
-              user.salary = this.salary
-              switch (user.name) {
-                case 'assembler':
-                  user.maxQuantyShoes = this.quantyShoes
-                  user.priceShoes = this.priceShoes
-                  break
-                case 'seller':
-                  user.commision = this.commision
-                  break
+              // this.modifyLocalStorage(user)
+
+              if (user.name === 'secretary') {
+                console.log('name', user)
+                user.salary = this.salary
+                console.log('zzz', user)
+                this.modifyLocalStorage(user)
+              } 
+              if (user.name === 'assembler') {
+                console.log('name', user)
+                user.salary = this.salary
+                user.maxQuantyShoes=this.maxQuantyShoes
+                user.priceShoes=this.priceShoes
+                console.log('ssss', user)
+                this.modifyLocalStorage(user)
               }
-              // this.users.splice(
-              //   this.users.findIndex(u => u.name === this.positionSelect),
-              //   1,
-              //   user
-              // )
+              if (user.name === 'seller') {
+                console.log('name', user)
+                user.salary = this.salary
+                user.commission5=this.commission5
+                user.commission10=this.commission10
+                console.log('llll', user)
+                this.modifyLocalStorage(user)
+              }
             }
+
             this.changeLoaderState()
             this.changeBtnChangeName()
             this.clearForm()
@@ -289,6 +304,15 @@ const app = Vue.createApp({
 
           break
       }
+    },
+    modifyLocalStorage (user) {
+      const dataToModify = JSON.parse(localStorage.getItem('usersData'))
+      const objectToModify = dataToModify.find(
+        userToModify => userToModify.name === user.name
+      ) 
+      Object.assign(objectToModify,user)
+      localStorage.setItem('usersData', JSON.stringify(dataToModify))
+      console.log('añadido')
     },
     change () {
       this.isChange = !this.isChange
