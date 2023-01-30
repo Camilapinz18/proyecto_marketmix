@@ -6,6 +6,10 @@
 - [Use](#Use)
 - [Documentation](#Documentation)
 
+## Link
+
+https://camilapinz18.github.io/proyecto_marketmix/
+
 ## Description:
 
 Development exercise proposed by MarketMix. Its goal is to show the final payrolls of each company employee.
@@ -23,7 +27,8 @@ It is composed by:
 The project is initialized with all the varibles empty, so it is necessary to fill all the information before generating the payroll.
 
 ## Login Screen:
-![image](https://user-images.githubusercontent.com/83082880/215349726-10935f14-643f-434d-94b0-8b6115a4abf6.png)
+
+![login](https://user-images.githubusercontent.com/83082880/215371114-a5658555-a741-48b9-9dda-af9bb19ccd66.png)
 
 The login screen has two input fields, one for the username and antoher for the password.
 To access the system you could use the following usernames and passwords:
@@ -33,17 +38,32 @@ To access the system you could use the following usernames and passwords:
 - assembler asb1
 - seller sll1
 
-When the LOGIN button is clicked, are runned the verifications. The verifications check the following aspects:
+If the LOGIN button is clicked and some input is empty, the username is wrong or doesnt exists or the password is wrong, it will throw an error.
 
-- Check for existing user name. Error displayed if fails=> The username is wrong or doesnt exists
-- Check for correct password. Error displayed if fails=> Wrong password
-- Check for full fields. Error displayed if fails=> You must fill all the fields to continue
+## Administrator screen:
+![admin2P](https://user-images.githubusercontent.com/83082880/215372419-3b49faae-ef10-4097-bfc5-cefa04d47b58.png)
+ 
+To use the Administrator screen start by pressing the "POSITION" selector and select the employee to modify, then click the CHANGE button; depending on the employee selected, there will be activated some options or another. Once changed the values, click on SAVE to store the modified data. An alert will be shown.
 
-Once the whole verifications have passed, the user can acces its account.
+IF you want to generate the payrolls, then click on the GENERATE PAYROLLS button, if there is missing some infromation, it will be displayed an alert window. The payrolls reports will only be genertaed if the admin and employes information is complete.
+
+## Payroll report:
+
+![payroll](https://user-images.githubusercontent.com/83082880/215373175-50166ae6-9dea-42ee-89d2-22ceec1b0c3a.png)
+
+The payroll report shows detailed information about the salary of each employee and the global payroll.
+
+## Seller screen:
+Write the required infromation and click the SAVE button, an alert window will be displayed.
+
+## Secretary screen:
+Write the required infromation and click the SAVE button, an alert window will be displayed.
+
+## Assembler screen:
+Write the required infromation and click the SAVE button, an alert window will be displayed.
 
 
-
-## Documentation:
+# Documentation:
 ### When the page is charged:
 
 Once the page has been opened, its defined the 'created' Hook, whose calls the onLoadPage() function:
