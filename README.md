@@ -24,7 +24,7 @@ It is composed by:
 
 ## Use:
 
-The project is initialized with all the varibles empty, so it is necessary to fill all the information before generating the payroll.
+The project is initialized with most of the varibles empty, so it is necessary to fill all the information before generating the payroll.
 
 ## Login Screen:
 
@@ -45,7 +45,7 @@ If the LOGIN button is clicked and some input is empty, the username is wrong or
  
 To use the Administrator screen start by pressing the "POSITION" selector and select the employee to modify, then click the CHANGE button; depending on the employee selected, there will be activated some options or another. Once changed the values, click on SAVE to store the modified data. An alert will be shown.
 
-IF you want to generate the payrolls, then click on the GENERATE PAYROLLS button, if there is missing some infromation, it will be displayed an alert window. The payrolls reports will only be genertaed if the admin and employes information is complete.
+IF you want to generate the payrolls, then click on the GENERATE PAYROLLS button, if there is missing some information, it will be displayed an alert window. The payrolls reports will only be genertaed if the admin and employes information is complete.
 
 ## Payroll report:
 
@@ -54,19 +54,22 @@ IF you want to generate the payrolls, then click on the GENERATE PAYROLLS button
 The payroll report shows detailed information about the salary of each employee and the global payroll.
 
 ## Seller screen:
-Write the required infromation and click the SAVE button, an alert window will be displayed.
+Write the required information and click the SAVE button, an alert window will be displayed.
+![seller](https://user-images.githubusercontent.com/83082880/215373976-54ddcdcb-dbd7-4291-84a8-3b1a02ec76e1.png)
 
 ## Secretary screen:
-Write the required infromation and click the SAVE button, an alert window will be displayed.
+Write the required information and click the SAVE button, an alert window will be displayed.
+![secreatry](https://user-images.githubusercontent.com/83082880/215374019-f64fa6d1-f75a-455d-8c5a-989ed3916d61.png)
 
 ## Assembler screen:
-Write the required infromation and click the SAVE button, an alert window will be displayed.
+Write the required information and click the SAVE button, an alert window will be displayed.
 
+![assembler](https://user-images.githubusercontent.com/83082880/215374099-3883f8c9-fa65-401a-97f1-36b88b449751.png)
 
 # Documentation:
 ### When the page is charged:
 
-Once the page has been opened, its defined the 'created' Hook, whose calls the onLoadPage() function:
+Once the page has been opened, it is defined the 'created' Hook, who calls the onLoadPage() function:
 ```
  created: function () {
     this.onLoadPage()
@@ -81,7 +84,7 @@ The onLoadPage function check if a user is already logged by calling the checkIs
     }
  ```
  
- checkIsAlreadyLogged function verifies if there is any infromation stored in the key 'userLogged' in the Local Storage. If there is information, it 
+ checkIsAlreadyLogged function verifies if there is any information stored in the key 'userLogged' in the Local Storage. If there is information, it 
  retrieves the user that is already logged and changes the activeLogin variable to false, and the corresponding user variable to true, in order to display the required user interface. This verification is usefull in order to keep active the session of an user, even if the page is reloaded or the browser closed:
  ```
  checkIsAlreadyLogged () {
@@ -112,7 +115,7 @@ The onLoadPage function check if a user is already logged by calling the checkIs
 ## Login Screen:
 
 In the login screen, once the LOGIN button is clicked are runned various verifications. 
-The first check is by running the checkFields function. The function check that the input fields are both fullied. If there are any empty input field, it throws an error by calling the launchError function. If there are not any empty input fields, it calls the checkData function:
+The first check is by running the checkFields function. The function check that the input fields are both fullfiled. If there is any empty input field, it throws an error by calling the launchError function. If there is not any empty input field, it calls the checkData function:
  ```
 checkFields () {
       if (this.user === '' || this.password === '') {
@@ -124,7 +127,7 @@ checkFields () {
 ```
 
 The checkData function checks for the existence of the user. It looks through the accounts array to find the username.
-If the username exists, then it verifies that the password is correct. If it is correct, it routes the user the corresponding user interface and adds the username to the LocalStorage key 'userLogged'. If the password is wrong, then it throws an error (Wrong password).
+If the username exists, then it verifies that the password is correct. If it is correct, it routes the user to the corresponding user interface and adds the username to the LocalStorage key 'userLogged'. If the password is wrong, then it throws an error (Wrong password).
 If the username doesnt exists it throws an error (he username is wrong or doesnt exists).
 
 When the user login successfully, the usersData information is stored in the LocalStorage 'usersData' key, in order to use that information in the future.
@@ -184,7 +187,7 @@ When the button SAVE is clicked, it calls the save function, that will be explai
 
 The goal of the Administrator screen is to modify and save cretrain infromation realted to the employees, like salaries, maximum shoes production, production cost by shoe and the seller commission percentages.
 
-This functionality is helded by four computed properties: currentSeller, currentAssembler, currentSecretary and currentUser. These properties allows to update instantly certain variables stored in usersData:
+This functionality is supported by four computed properties: currentSeller, currentAssembler, currentSecretary and currentUser. These properties allows to update instantly certain variables stored in usersData:
 ```
  computed: {
     currentSeller () {
@@ -202,7 +205,7 @@ This functionality is helded by four computed properties: currentSeller, current
   },
 ```
 
-When the SAVE button is clicked, it sends to the save function a paraeter with username that is being modified. The save function recevies the parameter and runs the corresponding code to that user in roder to save the infromation.
+When the SAVE button is clicked, it sends to the save function a parameter with the username that is being modified. The save function recevies the parameter and runs the corresponding code of that user in order to save the infromation.
 The information is saved in usersData array, and also in the localStorage:
 ```
 save (user) {
@@ -273,7 +276,7 @@ save (user) {
 ```
 
 By clicking the GENERATE PAYROLLS button it is called the generatePayroll function.
-This function check if the employees infromation is complete in roder to generate the reports. If the information is icomplete it thrwos an error (Failed generating payrolls. There is some missing information in ....), the rrror message shows whose employee informaiton is missing:
+This function check if the employees infromation is complete, in order to generate the reports. If the information is incomplete it throws an error (Failed generating payrolls. There is some missing information in ....), the error message shows whose employee information is missing:
 ```
 checkForCompleteEmployeesInfo () {
       this.dataToModify = JSON.parse(localStorage.getItem('usersData'))
@@ -286,7 +289,7 @@ checkForCompleteEmployeesInfo () {
       return missingInfo
     },
 ```
-If the employees information is complete, the it calls the liquidateAll function, which in turn calls the liquidateAssembler, liquidateSecretary and liquidateSeller functions. Each of this function runs a certain logic specified for each employee according to the requirements, then return an object with the full infromation of each employee; each returned object is pushed to the generalPayroll array in order to get the total payroll that the company has to pay by running a .map function:
+If the employees information is complete, then it calls the liquidateAll function, which in turn calls the liquidateAssembler, liquidateSecretary and liquidateSeller functions. Each of this functions runs a certain logic specified for each employee according to the requirements, then return an object with the full information of each employee; each returned object is pushed to the generalPayroll array in order to get the total payroll that the company has to pay by running a .map function:
 ```
  liquidateAll () {
       this.generalPayroll.push(this.liquidateAssembler())
@@ -297,11 +300,30 @@ If the employees information is complete, the it calls the liquidateAll function
     },
 ```
 
-When liquidateAll functino has finished its job, then it can be showed to user by accessing the generalPayroll infromation in the html file.
+When liquidateAll function has finished its job, then it can be showed to user by accessing the generalPayroll information in the HTML file.
 
+By clicking the LOGOUT button, the active session is closed and the Local Storage key 'userLogged' is removed:
+```
+logout (active) {
+      this.activeLogin = true
+      localStorage.removeItem('userLogged')
+      switch (active) {
+        case 'admin':
+          this.activeAdmin = false
+          break
+        case 'seller':
+          this.activeSeller = false
+          break
+        case 'secretary':
+          this.activeSecretary = false
+          break
+        case 'assembler':
+          this.activeAssembler = false
+          break
+      }
+    },
 
-
-
+```
 
 
 
